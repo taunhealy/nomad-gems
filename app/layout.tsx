@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Abhaya_Libre } from "next/font/google";
+import { Outfit, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -7,9 +7,9 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
-const abhayaLibre = Abhaya_Libre({
+const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-serif",
-  weight: ["500", "800"], // Medium and ExtraBold
+  weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${outfit.variable} ${abhayaLibre.variable} antialiased`}
+        className={`${outfit.variable} ${cormorantGaramond.variable} antialiased`}
       >
         {children}
       </body>

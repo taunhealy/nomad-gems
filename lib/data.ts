@@ -20,7 +20,7 @@ export const GEMS: Gem[] = [
     href: "/gems/francolin-house",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Tour_Healy-House-creator.mp4",
     locked: false,
-    bookingUrl: "www.blueowlmedia.nz",
+    bookingUrl: "https://www.blueowlmedia.nz",
   },
   {
     id: "g2",

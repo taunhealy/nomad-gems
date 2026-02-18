@@ -23,7 +23,6 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
   const containerRef = React.useRef<HTMLDivElement>(null);
   const controlsTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const pathname = usePathname();
 
   const [currentSrc, setCurrentSrc] = React.useState(videoSrc);
@@ -258,7 +257,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
             {/* Book Now Button - Top Right */}
             {currentBookingUrl && (
               <Button
-                href={currentBookingUrl}
+                href={currentBookingUrl.startsWith("http") ? currentBookingUrl : `https://${currentBookingUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="outline"

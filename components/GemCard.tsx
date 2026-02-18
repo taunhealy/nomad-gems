@@ -92,11 +92,11 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
           )}
 
           {/* Play Button Overlay */}
-          {!gem.locked && gem.src && (!isPlaying) && (
-            <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 pointer-events-none z-30 ${isHovered && !isPlaying && !hasPlayableVideo ? "opacity-100" : isHovered && isPlaying ? "opacity-0" : "opacity-0 group-hover:opacity-100"}`}>
-              <div className="w-16 h-16 bg-[#f46b6b]/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg transform scale-90 group-hover:scale-100 transition-transform duration-300">
+          {!gem.locked && gem.src && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-30">
+              <div className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-xl scale-75 group-hover:scale-100 transition-transform duration-500 ease-out">
                 <svg
-                  className="w-6 h-6 ml-1 text-white fill-current"
+                  className="w-6 h-6 ml-1 text-black fill-current"
                   viewBox="0 0 24 24"
                 >
                   <path d="M8 5v14l11-7z" />
@@ -111,7 +111,7 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
       <div className="flex justify-between items-center gap-4 w-full text-left mt-2">
         <div className="shrink grid gap-0.5">
           <p>
-            <span className={`font-serif lg:text-4xl text-2xl tracking-tighter leading-tight text-black transition-all ${!gem.locked ? "group-hover:underline decoration-1 underline-offset-4" : ""}`}>
+            <span className={`font-serif lg:text-3xl text-xl tracking-tighter leading-tight text-black transition-all ${!gem.locked ? "group-hover:underline decoration-1 underline-offset-4" : ""}`}>
               {gem.title}
             </span>
           </p>
@@ -120,10 +120,7 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
           </p>
         </div>
 
-        <div className="flex flex-row gap-[10px] items-center shrink-0">
-          <span className="font-sans text-sm font-medium hidden sm:inline-block text-black">
-            {gem.locked ? "Coming Soon" : (gem.src ? "Watch Tour" : "View Gem")}
-          </span>
+        <div className="flex flex-row items-center shrink-0">
           {!gem.locked && (
               <svg
                 className="w-5 h-5 transform transition-transform duration-300 group-hover:translate-x-1 text-black"

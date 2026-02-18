@@ -10,6 +10,7 @@ interface ButtonBaseProps {
   children: React.ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
+  rounded?: boolean;
   className?: string;
 }
 
@@ -49,7 +50,7 @@ const variantClasses: Record<ButtonVariant, { base: string; fill: string; hover:
   },
 };
 
-export default function Button({ children, variant = "primary", size = "md", className, ...props }: ButtonProps) {
+export default function Button({ children, variant = "primary", size = "md", rounded = true, className, ...props }: ButtonProps) {
   const styles = variantClasses[variant];
 
   const sharedClasses = cn(
@@ -57,8 +58,8 @@ export default function Button({ children, variant = "primary", size = "md", cla
     "group/btn relative inline-flex items-center justify-center gap-2 overflow-hidden",
     "border font-sans font-semibold uppercase tracking-widest leading-none cursor-pointer",
     "transition-colors duration-500 ease-[cubic-bezier(0.3,1,0.3,1)]",
-    // Agio asymmetric border-radius
-    "[border-radius:2px_2px_20px_2px]",
+    // Border-radius
+    rounded ? "[border-radius:2px_2px_20px_2px]" : "rounded-none",
     // Size
     sizeClasses[size],
     // Variant
@@ -96,7 +97,7 @@ export default function Button({ children, variant = "primary", size = "md", cla
 
   const buttonProps = props as ButtonAsButton;
   return (
-    <button className={sharedClasses} {...buttonProps}>
+    <button className={sharedClasses} {...buttonProps} suppressHydrationWarning>
       {fillEl}
       {label}
     </button>

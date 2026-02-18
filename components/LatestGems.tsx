@@ -27,7 +27,7 @@ export default function LatestGems() {
   };
 
   return (
-    <div className="bg-[#fff7f0] w-full flex flex-col items-start py-[120px] px-[100px] gap-[60px]">
+    <div className="bg-[#fff7f0] w-full flex flex-col items-center py-16 md:py-[120px] px-6 md:px-[100px] gap-8 md:gap-[60px]">
       <VideoModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
@@ -39,18 +39,18 @@ export default function LatestGems() {
       <div className="w-full max-w-[1440px]">
         {/* Header */}
         <div className="w-full flex flex-col gap-6 items-start text-black">
-          <h2 className="font-serif font-medium text-[72px] leading-tight">
+          <h2 className="font-serif font-medium text-[40px] md:text-[72px] leading-tight">
             Latest Gems
           </h2>
-          <p className="font-sans text-[18px] leading-relaxed max-w-[540px]">
+          <p className="font-sans text-[16px] md:text-[18px] leading-relaxed max-w-[540px]">
             Immerse yourself in nature to enable deep focus and relaxation. These are the gems we've experienced.
           </p>
         </div>
 
         {/* Content */}
-        <div className="w-full flex flex-col gap-[60px] mt-[60px]">
+        <div className="w-full flex flex-col gap-8 md:gap-[60px] mt-8 md:mt-[60px]">
           {/* Controls: Categories & View All */}
-          <div className="flex flex-wrap items-center justify-between w-full gap-8 border-b border-black/10 pb-4">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between w-full gap-8 border-b border-black/10 pb-4">
             <TabFilter 
               tabs={categories} 
               activeTab={activeTab} 
@@ -61,7 +61,7 @@ export default function LatestGems() {
           </div>
 
           {/* Cards Grid */}
-          <div className="grid grid-cols-3 gap-8 w-full min-h-[600px] justify-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full min-w-full">
             {GEMS.filter(gem => activeTab === "All" || gem.category === activeTab).map((gem) => (
               <GemCard 
                 key={gem.id} 
