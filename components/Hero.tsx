@@ -35,8 +35,8 @@ export default function Hero() {
           Nomad Gems
         </h1>
         
-        <div className="flex flex-col md:flex-row items-center gap-[10px] text-white w-full md:w-auto">
-          <div className="w-full md:w-auto">
+        <div className="flex flex-col md:flex-row items-start gap-[10px] text-white w-full md:w-auto">
+          <div className="w-full md:w-auto flex flex-col items-center group/explore">
             <Button 
               variant="primary" 
               size="md"
@@ -46,8 +46,11 @@ export default function Hero() {
             >
               Explore Stays
             </Button>
+            <span className="font-serif text-sm md:text-base italic text-[#f46b6b] mt-2 opacity-0 translate-y-1 group-hover/explore:opacity-100 group-hover/explore:translate-y-0 transition-all duration-300 ease-out pointer-events-none whitespace-nowrap">
+              Find your next deep-work sanctuary
+            </span>
           </div>
-          <div className="w-full md:w-auto">
+          <div className="w-full md:w-auto flex flex-col items-center group/feature">
             <Button 
               variant="outline" 
               size="md"
@@ -56,6 +59,9 @@ export default function Hero() {
             >
               Feature Your Retreat
             </Button>
+            <span className="font-serif text-sm md:text-base italic text-[#f46b6b] mt-2 opacity-0 translate-y-1 group-hover/feature:opacity-100 group-hover/feature:translate-y-0 transition-all duration-300 ease-out pointer-events-none whitespace-nowrap">
+              Increase mid-week bookings with digital nomads
+            </span>
           </div>
         </div>
       </div>

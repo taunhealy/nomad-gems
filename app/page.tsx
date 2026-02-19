@@ -1,7 +1,8 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import ValueProp from "@/components/ValueProp";
 import Image from "next/image";
-import { Wifi, Monitor, Coffee, TreePine, Gem } from "lucide-react";
+import { Gem } from "lucide-react";
 import LatestGems from "@/components/LatestGems";
 import Link from "next/link";
 import Button from "@/components/Button";
@@ -16,53 +17,7 @@ export default function Home() {
       <Hero />
       
       {/* Value Prop Section */}
-      <div id="about" className="bg-[#3f1d14] content-stretch flex items-start overflow-clip p-[10px] relative shrink-0 w-full">
-        <div className="content-stretch flex flex-[1_0_0] flex-col gap-[32px] min-h-auto md:min-h-[542px] py-16 items-center justify-center leading-0 not-italic overflow-clip px-6 md:px-[100px] relative text-center">
-          <div className="flex flex-col font-sans font-normal justify-center relative shrink-0 text-[32px] md:text-[48px] text-white w-full tracking-wide">
-            <p className="leading-[1.2] whitespace-pre-wrap">Work in nature.</p>
-          </div>
-          <div className="flex flex-col font-serif font-medium justify-center relative shrink-0 text-[#f46b6b] text-[28px] md:text-[40px] italic w-full">
-            <p className="leading-[1.2] whitespace-pre-wrap" style={{ textWrap: "balance" }}>(for digital nomads seeking deep work)</p>
-          </div>
-
-          {/* Description */}
-          <div className="flex flex-col font-sans font-normal justify-center relative shrink-0 text-[16px] md:text-[18px] text-white/70 max-w-[600px] leading-relaxed mt-4">
-            <p>
-              Nomad Gems curates exclusive, work-ready sanctuaries designed for the modern professional. 
-              Each location is verified for high-speed connectivity, ergonomic comfort, and natural beauty, 
-              ensuring you can perform at your best while recharging in nature.
-            </p>
-          </div>
-
-          {/* Amenities Icons */}
-          <div className="flex flex-wrap gap-8 md:gap-12 mt-8 items-center justify-center text-[#f46b6b]">
-            <Link href="/about#process" className="flex flex-col items-center gap-3 group cursor-pointer">
-              <div className="p-4 bg-white/10 rounded-full group-hover:bg-white/20 transition-colors">
-                <Wifi size={24} className="md:w-[32px] md:h-[32px]" strokeWidth={1.5} />
-              </div>
-              <span className="font-sans text-xs md:text-sm font-medium text-white/80">Fast Wifi</span>
-            </Link>
-            <Link href="/about#process" className="flex flex-col items-center gap-3 group cursor-pointer">
-              <div className="p-4 bg-white/10 rounded-full group-hover:bg-white/20 transition-colors">
-                <Monitor size={24} className="md:w-[32px] md:h-[32px]" strokeWidth={1.5} />
-              </div>
-              <span className="font-sans text-xs md:text-sm font-medium text-white/80">Workspace</span>
-            </Link>
-            <Link href="/about#process" className="flex flex-col items-center gap-3 group cursor-pointer">
-              <div className="p-4 bg-white/10 rounded-full group-hover:bg-white/20 transition-colors">
-                <Coffee size={24} className="md:w-[32px] md:h-[32px]" strokeWidth={1.5} />
-              </div>
-              <span className="font-sans text-xs md:text-sm font-medium text-white/80">Coffee</span>
-            </Link>
-            <Link href="/about#process" className="flex flex-col items-center gap-3 group cursor-pointer">
-              <div className="p-4 bg-white/10 rounded-full group-hover:bg-white/20 transition-colors">
-                <TreePine size={24} className="md:w-[32px] md:h-[32px]" strokeWidth={1.5} />
-              </div>
-              <span className="font-sans text-xs md:text-sm font-medium text-white/80">Nature</span>
-            </Link>
-          </div>
-        </div>
-      </div>
+      <ValueProp />
 
       {/* Works / Latest Gems Section */}
       <div id="gems" className="w-full">
