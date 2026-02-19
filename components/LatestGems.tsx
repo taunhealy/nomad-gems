@@ -16,7 +16,7 @@ export default function LatestGems() {
   const [currentVideoSrc, setCurrentVideoSrc] = useState("");
   const [currentBookingUrl, setCurrentBookingUrl] = useState("");
   
-  const categories = ["All", "Villa", "Cabin"];
+  const categories = ["All", "Activity", "Villa", "Cabin"];
 
   const handleGemClick = (src?: string, bookingUrl?: string) => {
     if (src) {

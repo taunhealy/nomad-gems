@@ -2,7 +2,7 @@ export type Gem = {
   id: string;
   title: string;
   location: string;
-  category: "Villa" | "Cabin" | "All";
+  category: "Villa" | "Cabin" | "Activity" | "All";
   image: string;
   href: string;
   src?: string;
@@ -35,13 +35,13 @@ export const GEMS: Gem[] = [
   },
   {
     id: "g3",
-    title: "Lake Cabin",
-    location: "Lake Louise, AB, Canada",
-    category: "Cabin",
-    image: "https://images.unsplash.com/photo-1610048899906-d8f64bc45464?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    href: "/gems/lake-cabin",
-    src: "",
-    locked: true,
-    bookingUrl: "",
+    title: "Show your spot, effectively",
+    location: "Cape Town - Atlantis Dunes",
+    category: "Activity",
+    image: "https://images.unsplash.com/photo-1621689264388-6c8916d860d8?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Quad biking image
+    href: "/gems/activity-showcase",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Quad-Biking_Showcase.mp4",
+    locked: false,
+    bookingUrl: "https://www.blueowlmedia.nz",
   },
 ];

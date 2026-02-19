@@ -48,7 +48,7 @@ export default function ValueProp() {
       id="about"
       className="bg-[#3f1d14] content-stretch flex items-start overflow-clip p-[10px] relative shrink-0 w-full"
     >
-      <div className="content-stretch flex flex-[1_0_0] flex-col gap-[32px] min-h-auto md:min-h-[542px] py-16 items-center justify-center leading-0 not-italic overflow-clip px-6 md:px-[100px] relative text-center">
+      <div className="content-stretch flex flex-[1_0_0] flex-col gap-[32px] min-h-[520px] md:min-h-[580px] py-16 items-center justify-center leading-0 not-italic overflow-clip px-6 md:px-[100px] relative text-center">
         
         {/* Audience Toggle */}
         <div className="flex items-center gap-1 bg-white/10 backdrop-blur-sm rounded-full p-1 border border-white/10">

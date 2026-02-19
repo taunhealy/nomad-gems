@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Button from "./Button";
 
+import { Gem } from "lucide-react";
+
 const imgHero = "https://images.unsplash.com/photo-1697807650304-907257330a3e?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
 export default function Hero() {
@@ -44,6 +46,7 @@ export default function Hero() {
               onClick={() => scrollToSection("#gems")}
               className="w-full md:w-auto md:px-10 md:py-4 md:text-base"
             >
+              <Gem className="w-4 h-4 text-white group-hover/btn:text-[#3f1d14] transition-colors duration-300" />
               Explore Stays
             </Button>
             <span className="font-serif text-sm md:text-base italic text-[#f46b6b] mt-2 opacity-0 translate-y-1 group-hover/explore:opacity-100 group-hover/explore:translate-y-0 transition-all duration-300 ease-out pointer-events-none whitespace-nowrap">
