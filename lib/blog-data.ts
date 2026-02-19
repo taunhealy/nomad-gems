@@ -32,7 +32,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         heading: "What Remote Workers Actually Need",
-        body: "Forget the ping-pong table. Remote workers need three things: reliable high-speed internet (50 Mbps minimum, hardwired if possible), a quiet dedicated workspace with good lighting, and strong coffee. That's it. Secondary perks like a garden view, standing desk, or a second monitor are differentiators — but the fundamentals come first. If your Wi-Fi drops during a Zoom call, they won't come back.",
+        body: "Forget the ping-pong table. Remote workers need three things: reliable high-speed internet (10 Mbps minimum, 25+ Mbps ideal, hardwired if possible), a quiet dedicated workspace with good lighting, and strong coffee. That's it. Secondary perks like a garden view, standing desk, or a second monitor are differentiators — but the fundamentals come first. If your Wi-Fi drops during a Zoom call, they won't come back.",
       },
       {
         heading: "Price It Right: The Midweek Rate",
@@ -58,7 +58,7 @@ export const BLOG_POSTS: BlogPost[] = [
     readTime: "4 min read",
     date: "2026-02-10",
     image:
-      "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1740&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1721249710785-3a0cb565707b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGZwdiUyMGRyb25lfGVufDB8fDB8fHww",
     sections: [
       {
         heading: "The Scroll-Stopping Power of Video",
@@ -134,7 +134,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         heading: "The Wi-Fi Test (Before You Book)",
-        body: "Ask the host for a speed test screenshot — not from their phone on 5G, but from a laptop connected to the property's Wi-Fi. You need 50 Mbps download minimum for comfortable video calls and cloud work. Ask about the router location, whether there's ethernet available, and what happens when the connection drops. If the host can't answer these questions confidently, move on.",
+        body: "Ask the host for a speed test screenshot — not from their phone on 5G, but from a laptop connected to the property's Wi-Fi. You need at least 10 Mbps download for video calls — 25+ Mbps is ideal for comfortable cloud work alongside. Ask about the router location, whether there's ethernet available, and what happens when the connection drops. If the host can't answer these questions confidently, move on.",
       },
       {
         heading: "Workspace: Desk, Chair, Light",

@@ -264,7 +264,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
                 size="sm"
                 onClick={(e: React.MouseEvent<HTMLAnchorElement>) => e.stopPropagation()}
                 className={cn(
-                  "absolute top-4 right-4 z-30 text-white transition-all duration-300",
+                  "absolute top-4 left-4 md:left-auto md:right-4 z-30 text-white transition-all duration-300",
                   showControls ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
                 )}
               >

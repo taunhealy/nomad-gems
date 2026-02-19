@@ -13,7 +13,7 @@ const features = [
     icon: Wifi,
     title: "High-Speed Connectivity",
     description:
-      "Every gem is verified for 50 Mbps+ download speeds. Video calls, cloud syncs, and deploys — without the anxiety.",
+      "Every gem is verified for 10 Mbps+ download speeds (25+ Mbps ideal). Video calls, cloud syncs, and deploys — without the anxiety.",
   },
   {
     icon: Monitor,
@@ -69,7 +69,7 @@ const principles = [
 ];
 
 const stats = [
-  { value: "50+", label: "Mbps Minimum" },
+  { value: "10+", label: "Mbps Minimum" },
   { value: "100%", label: "Verified Stays" },
   { value: "24/7", label: "Support" },
   { value: "3", label: "Countries" },
