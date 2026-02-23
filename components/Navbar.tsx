@@ -9,12 +9,15 @@ import ArrowLink from "./ArrowLink";
 import GemCard from "./GemCard";
 import { VideoModal } from "./VideoModal";
 import { GEMS } from "@/lib/data";
+import { BLOG_POSTS } from "@/lib/blog-data";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isGemsOpen, setIsGemsOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isBlogOpen, setIsBlogOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   
   // Modal state
@@ -179,6 +182,56 @@ export default function Navbar() {
             </div>
         </div>
 
+        {/* Blog — mega menu */}
+        <div 
+            className="h-full flex items-center"
+            onMouseEnter={() => setIsBlogOpen(true)}
+            onMouseLeave={() => setIsBlogOpen(false)}
+        >
+            <Link
+            href="/#blog"
+            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isBlogOpen ? "text-black" : "text-black/60 hover:text-black"}`}
+            >
+            <span className="relative">
+              Blog
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f46b6b] transition-all duration-300 group-hover:w-full" />
+            </span>
+            </Link>
+
+            {/* Scale-in Mega Menu */}
+            <div 
+                className={`absolute left-0 top-[80px] w-full bg-white border-b border-black/5 shadow-xl transition-all duration-300 origin-top overflow-hidden ${
+                    isBlogOpen ? "opacity-100 visible max-h-[600px]" : "opacity-0 invisible max-h-0"
+                }`}
+            >
+                <div className="w-full max-w-[1440px] mx-auto px-6 md:px-[90px] py-12 flex flex-col gap-8">
+                    <div className="flex items-center justify-between border-b border-black/10 pb-4">
+                        <span className="font-serif font-medium text-2xl text-black">Insights & Strategies</span>
+                        <ArrowLink text="Read All Posts" href="/#blog" />
+                    </div>
+                    
+                    <div className="grid grid-cols-3 gap-8">
+                        {BLOG_POSTS.slice(0, 3).map((post) => (
+                            <Link key={post.id} href={`/blog/${post.slug}`} className="group/item flex flex-col gap-4">
+                                <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
+                                    <Image 
+                                      src={post.image} 
+                                      alt={post.title} 
+                                      fill 
+                                      className="object-cover transition-transform duration-500 group-hover/item:scale-105" 
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <span className="font-sans text-[10px] uppercase tracking-widest text-[#f46b6b]">{post.category}</span>
+                                    <h4 className="font-serif text-lg text-black leading-tight group-hover/item:text-[#f46b6b] transition-colors">{post.title}</h4>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {/* Contact — mega menu */}
         <div 
             className="h-full flex items-center"
@@ -271,6 +324,13 @@ export default function Navbar() {
             className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
           >
             Gems
+          </Link>
+          <Link
+            href="/#blog"
+            onClick={() => setIsMenuOpen(false)}
+            className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
+          >
+            Blog
           </Link>
           <Link
             href="#contact"

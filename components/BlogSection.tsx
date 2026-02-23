@@ -97,7 +97,7 @@ export default function BlogSection() {
         </div>
 
         {/* Blog Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full min-h-[1000px] md:min-h-[800px] lg:min-h-[600px] items-start content-start">
           {filteredPosts.map((post) => (
             <BlogCard key={post.id} post={post} />
           ))}

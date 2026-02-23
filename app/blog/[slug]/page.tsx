@@ -151,25 +151,6 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           </div>
         </article>
       </main>
-
-      {/* Footer */}
-      <div className="bg-[#3f1d14] w-full flex flex-col md:flex-row items-stretch justify-between px-8 md:px-[100px] py-[80px] text-[#c73f3b] gap-12">
-        <div className="flex flex-col justify-between gap-12">
-          <div className="flex flex-col gap-4 font-serif font-bold text-[20px] tracking-wide">
-            <Link href="/" className="hover:text-[#f46b6b] transition-colors">Home</Link>
-            <Link href="/about" className="hover:text-[#f46b6b] transition-colors">About</Link>
-            <Link href="/work" className="hover:text-[#f46b6b] transition-colors">Gems</Link>
-          </div>
-          <div className="flex flex-col gap-2 font-sans text-white/50 text-sm tracking-widest uppercase">
-            <span>© 2026 Nomad Gems. All Rights Reserved. Built By Kea Logic.</span>
-          </div>
-        </div>
-        <div className="flex flex-col items-end mt-auto">
-          <h1 className="font-serif font-bold text-[60px] md:text-[80px] text-[#f46b6b] leading-none opacity-20 select-none">
-            Nomad Gems
-          </h1>
-        </div>
-      </div>
     </div>
   );
 }

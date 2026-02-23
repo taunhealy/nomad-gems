@@ -233,31 +233,6 @@ export default function WorkPage() {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <div className="bg-[#3f1d14] w-full flex flex-col px-12 md:px-[100px] py-16 md:py-[80px] text-[#c73f3b] gap-12 md:gap-24">
-        
-        {/* Main Content Row */}
-        <div className="w-full flex flex-col md:flex-row justify-between gap-12">
-           {/* Left: Nav */}
-           <div className="flex flex-col gap-6 font-serif font-bold text-[24px] tracking-wide">
-             <a href="/" className="hover:text-[#f46b6b] transition-colors">Home</a>
-             <a href="/about" className="hover:text-[#f46b6b] transition-colors">About</a>
-             <a href="/work" className="hover:text-[#f46b6b] transition-colors flex items-center gap-2">
-               <Gem size={24} strokeWidth={2} /> Gems
-             </a>
-             <a href="#contact" className="hover:text-[#f46b6b] transition-colors">Contact</a>
-           </div>
-        </div>
-
-        {/* Separator Line */}
-        <div className="w-full h-px bg-[#f46b6b]/20" />
-
-        {/* Bottom Row */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 font-sans text-white/50 text-sm tracking-widest uppercase w-full">
-           <span>© 2026 Nomad Gems. All Rights Reserved. Built By Kea Logic.</span>
-        </div>
-      </div>
     </div>
   );
 }

@@ -79,15 +79,23 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
     const matchedGem = GEMS.find((g) => g.src === newSrc);
     setCurrentBookingUrl(matchedGem?.bookingUrl || "");
 
-    // Update URL if slug is provided (optional for now)
-    // if (slug) {
-    //     const params = new URLSearchParams(searchParams.toString());
-    //     if (params.get("work") !== slug) {
-    //         params.set("work", slug);
-    //         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    //     }
-    // }
+    // Update URL to make it shareable
+    if (matchedGem && matchedGem.href) {
+        window.history.replaceState(null, '', matchedGem.href);
+    }
   };
+
+  // Sync initial URL when modal opens
+  React.useEffect(() => {
+    if (isOpen && currentSrc) {
+      const matchedGem = GEMS.find((g) => g.src === currentSrc);
+      if (matchedGem && matchedGem.href) {
+        window.history.replaceState(null, '', matchedGem.href);
+      }
+    } else if (!isOpen && pathname) {
+      window.history.replaceState(null, '', pathname);
+    }
+  }, [isOpen, currentSrc, pathname]);
 
   // Autoplay effect when src changes or modal opens
   React.useEffect(() => {
@@ -406,7 +414,9 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
             {/* CTA */}
             <div className="p-6 border-t border-[#f46b6b]/10 bg-[#371911]">
                 <a 
-                    href="/contact" 
+                    href={currentBookingUrl ? (currentBookingUrl.startsWith('http') ? currentBookingUrl : `https://${currentBookingUrl}`) : "https://www.blueowlmedia.nz"}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex w-full items-center justify-between p-4 rounded-lg bg-[#f46b6b] hover:bg-[#d65252] transition-colors text-white group shadow-lg shadow-[#f46b6b]/10"
                 >
                     <div className="flex flex-col">

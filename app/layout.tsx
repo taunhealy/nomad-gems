@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Cormorant_Garamond } from "next/font/google";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -26,9 +27,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${outfit.variable} ${cormorantGaramond.variable} antialiased`}
+        className={`${outfit.variable} ${cormorantGaramond.variable} antialiased flex flex-col min-h-screen`}
       >
-        {children}
+        <main className="flex-1 w-full relative flex flex-col items-center">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

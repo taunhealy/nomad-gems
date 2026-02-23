@@ -21,6 +21,24 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "a0.muscache.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.360on62.co.za",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i0.wp.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };
