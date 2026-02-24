@@ -3,6 +3,7 @@ export type Gem = {
   title: string;
   location: string;
   category: "Villa" | "Cabin" | "Cottage" | "All";
+  region?: string;
   image: string;
   href: string;
   src?: string;
@@ -75,7 +76,56 @@ export const GEMS: Gem[] = [
     image: "https://i0.wp.com/bigskycottages.co.za/wp-content/uploads/2020/10/LIGHT-LOUNGE-STUDIO-304-scaled.jpg?resize=1920%2C1080&ssl=1",
     href: "https://bigskycottages.co.za/",
     src: "",
-    comingSoon: true,
-    bookingUrl: "https://bigskycottages.co.za/",
+  }
+];
+
+export const ENVIRONMENTS: Gem[] = [
+  {
+    id: "e1",
+    title: "Arniston Dunes",
+    location: "Western Cape, South Africa",
+    category: "All",
+    region: "Western Cape",
+    image: "https://images.unsplash.com/photo-1546948630-1149ea60dc86?q=80&w=1920&auto=format&fit=crop",
+    href: "#",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl%20Media%20Environment%20Arniston%20Dunes-Coast-Compressed.mp4",
+    locked: false,
+    bookingUrl: ""
+  },
+  {
+    id: "e2",
+    title: "Struisbaai Harbour",
+    location: "Western Cape, South Africa",
+    category: "All",
+    region: "Western Cape",
+    image: "https://images.unsplash.com/photo-1506477331477-33d5d8b3dc85?auto=format&fit=crop&q=80&w=1920",
+    href: "#",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media%20Content%20Struisbaai-Harbour%20Short-Compressed.mp4",
+    locked: false,
+    bookingUrl: ""
+  },
+  {
+    id: "e3",
+    title: "Arniston Cliffs",
+    location: "Western Cape, South Africa",
+    category: "All",
+    region: "Western Cape",
+    image: "https://images.unsplash.com/photo-1506477331477-33d5d8b3dc85?auto=format&fit=crop&q=80&w=1920",
+    href: "#",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Environment_ArnistonCoast-Sunset-web.mp4",
+    locked: false,
+    bookingUrl: ""
+  },
+  {
+    id: "e4",
+    title: "Cape Agulhas Lighthouse",
+    location: "Western Cape, South Africa",
+    category: "All",
+    region: "Western Cape",
+    image: "https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=1920",
+    href: "#",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Shorts_Environ_Cape-Agulhas-Lighthouse.mp4",
+    locked: false,
+    bookingUrl: ""
   }
 ];

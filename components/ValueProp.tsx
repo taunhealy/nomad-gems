@@ -53,6 +53,7 @@ export default function ValueProp() {
         {/* Audience Toggle */}
         <div className="flex items-center gap-1 bg-white/10 backdrop-blur-sm rounded-full p-1 border border-white/10">
           <button
+            suppressHydrationWarning
             onClick={() => setAudience("nomads")}
             className={cn(
               "px-6 py-2.5 rounded-full font-sans text-xs md:text-sm font-semibold uppercase tracking-widest transition-all duration-300 cursor-pointer",
@@ -64,6 +65,7 @@ export default function ValueProp() {
             Nomads
           </button>
           <button
+            suppressHydrationWarning
             onClick={() => setAudience("owners")}
             className={cn(
               "px-6 py-2.5 rounded-full font-sans text-xs md:text-sm font-semibold uppercase tracking-widest transition-all duration-300 cursor-pointer",

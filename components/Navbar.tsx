@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
@@ -8,7 +8,7 @@ import { Menu, X } from "lucide-react";
 import ArrowLink from "./ArrowLink";
 import GemCard from "./GemCard";
 import { VideoModal } from "./VideoModal";
-import { GEMS } from "@/lib/data";
+import { GEMS, ENVIRONMENTS } from "@/lib/data";
 import { BLOG_POSTS } from "@/lib/blog-data";
 import Image from "next/image";
 
@@ -16,9 +16,12 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isGemsOpen, setIsGemsOpen] = useState(false);
+  const [isEnvironmentsOpen, setIsEnvironmentsOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isBlogOpen, setIsBlogOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -73,13 +76,30 @@ export default function Navbar() {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Check on mount
+    
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const isSolid = (isHovered || isScrolled) && !isMenuVisible;
+
   return (
-    <nav className="bg-white flex items-center justify-between px-6 md:px-[90px] h-[80px] w-full fixed top-0 z-50 border-b border-black/5">
+    <nav 
+      className={`flex items-center justify-between px-6 md:px-[90px] h-[80px] w-full fixed top-0 z-50 transition-colors duration-300 ${isSolid ? "bg-white border-b border-black/5" : "bg-transparent border-b border-transparent"}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {/* Logo */}
       <div className="flex items-center h-full p-[10px] z-[200] relative">
         <Link 
           href="/" 
-          className={`font-serif font-bold text-[24px] leading-none text-center transition-colors duration-300 ${isMenuVisible ? "text-white" : "text-black"}`}
+          className={`font-serif font-bold text-[24px] leading-none text-center transition-colors duration-300 ${isMenuVisible ? "text-white" : isSolid ? "text-black" : "text-white"}`}
           onClick={() => setIsMenuOpen(false)}
         >
           Nomad Gems
@@ -96,7 +116,7 @@ export default function Navbar() {
         >
             <Link
             href="/about"
-            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isAboutOpen ? "text-black" : "text-black/60 hover:text-black"}`}
+            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isAboutOpen ? "text-black" : "text-black/60 hover:text-black") : (isAboutOpen ? "text-white" : "text-white/80 hover:text-white")}`}
             >
             <span className="relative">
               About
@@ -142,10 +162,10 @@ export default function Navbar() {
         >
             <Link
             href="/work"
-            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isGemsOpen ? "text-black" : "text-black/60 hover:text-black"}`}
+            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isGemsOpen ? "text-black" : "text-black/60 hover:text-black") : (isGemsOpen ? "text-white" : "text-white/80 hover:text-white")}`}
             >
             <span className="relative">
-              Gems
+              Stays
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f46b6b] transition-all duration-300 group-hover:w-full" />
             </span>
             </Link>
@@ -182,6 +202,54 @@ export default function Navbar() {
             </div>
         </div>
 
+        {/* Environments — mega menu */}
+        <div 
+            className="h-full flex items-center"
+            onMouseEnter={() => setIsEnvironmentsOpen(true)}
+            onMouseLeave={() => setIsEnvironmentsOpen(false)}
+        >
+            <Link
+            href="/work?tab=environments"
+            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isEnvironmentsOpen ? "text-black" : "text-black/60 hover:text-black") : (isEnvironmentsOpen ? "text-white" : "text-white/80 hover:text-white")}`}
+            >
+            <span className="relative">
+              Environments
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f46b6b] transition-all duration-300 group-hover:w-full" />
+            </span>
+            </Link>
+
+            {/* Scale-in Mega Menu */}
+            <div 
+                className={`absolute left-0 top-[80px] w-full bg-white border-b border-black/5 shadow-xl transition-all duration-300 origin-top overflow-hidden ${
+                    isEnvironmentsOpen ? "opacity-100 visible max-h-[600px]" : "opacity-0 invisible max-h-0"
+                }`}
+            >
+                <div className="w-full max-w-[1440px] mx-auto px-6 md:px-[90px] py-12 flex flex-col gap-8">
+                    <div className="flex items-center justify-between border-b border-black/10 pb-4">
+                        <span className="font-serif font-medium text-2xl text-black">Explore Environments</span>
+                        <ArrowLink text="View Full Collection" href="/work" />
+                    </div>
+                    
+                    <div className="grid grid-cols-4 gap-8">
+                        {ENVIRONMENTS.slice(0, 4).map((gem) => (
+                            <div key={gem.id} className="w-full">
+                                <GemCard 
+                                    gem={gem} 
+                                    onClick={(src, bookingUrl) => {
+                                        if (src) {
+                                            setCurrentVideoSrc(src);
+                                            setCurrentBookingUrl(bookingUrl || "");
+                                            setIsModalOpen(true);
+                                        }
+                                    }} 
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {/* Blog — mega menu */}
         <div 
             className="h-full flex items-center"
@@ -190,7 +258,7 @@ export default function Navbar() {
         >
             <Link
             href="/#blog"
-            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isBlogOpen ? "text-black" : "text-black/60 hover:text-black"}`}
+            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isBlogOpen ? "text-black" : "text-black/60 hover:text-black") : (isBlogOpen ? "text-white" : "text-white/80 hover:text-white")}`}
             >
             <span className="relative">
               Blog
@@ -248,7 +316,7 @@ export default function Navbar() {
                 element.scrollIntoView({ behavior: "smooth" });
               }
             }}
-            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isContactOpen ? "text-black" : "text-black/60 hover:text-black"}`}
+            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isContactOpen ? "text-black" : "text-black/60 hover:text-black") : (isContactOpen ? "text-white" : "text-white/80 hover:text-white")}`}
             >
             <span className="relative">
               Contact
@@ -290,7 +358,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Button */}
       <button 
-        className={`md:hidden z-[200] relative w-[48px] h-[48px] flex items-center justify-center transition-colors duration-300 cursor-pointer ${isMenuVisible ? "text-white" : "text-black"}`}
+        className={`md:hidden z-[200] relative w-[48px] h-[48px] flex items-center justify-center transition-colors duration-300 cursor-pointer ${isMenuVisible ? "text-white" : isSolid ? "text-black" : "text-white"}`}
         onClick={toggleMenu}
       >
         <Menu 
@@ -323,7 +391,14 @@ export default function Navbar() {
             onClick={() => setIsMenuOpen(false)}
             className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
           >
-            Gems
+            Stays
+          </Link>
+          <Link
+            href="/work?tab=environments"
+            onClick={() => setIsMenuOpen(false)}
+            className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
+          >
+            Environments
           </Link>
           <Link
             href="/#blog"

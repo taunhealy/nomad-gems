@@ -5,7 +5,7 @@ import Image from "next/image";
 import { X, Play, Pause, Volume2, VolumeX, Maximize2, Minimize2, ExternalLink, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { GEMS, Gem } from "../lib/data";
+import { GEMS, ENVIRONMENTS, Gem } from "../lib/data";
 import Button from "./Button";
 
 interface VideoModalProps {
@@ -14,8 +14,6 @@ interface VideoModalProps {
   videoSrc: string;
   bookingUrl?: string;
 }
-
-const RELATED_VIDEOS = GEMS;
 
 export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModalProps) {
   const videoRef = React.useRef<HTMLVideoElement>(null);
@@ -34,6 +32,10 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
   const [isMuted, setIsMuted] = React.useState(false);
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [showControls, setShowControls] = React.useState(true);
+
+  const isEnvironment = ENVIRONMENTS.some(e => e.src === currentSrc);
+  const relatedVideos = isEnvironment ? ENVIRONMENTS : GEMS;
+  const sidebarTitle = isEnvironment ? "More Environments" : "More Gems";
 
   // Helper to handle auto-hide
   const resetControlsTimeout = React.useCallback(() => {
@@ -76,7 +78,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
     setProgress(0);
 
     // Look up the booking URL for the new video
-    const matchedGem = GEMS.find((g) => g.src === newSrc);
+    const matchedGem = [...GEMS, ...ENVIRONMENTS].find((g) => g.src === newSrc);
     setCurrentBookingUrl(matchedGem?.bookingUrl || "");
 
     // Update URL to make it shareable
@@ -88,7 +90,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
   // Sync initial URL when modal opens
   React.useEffect(() => {
     if (isOpen && currentSrc) {
-      const matchedGem = GEMS.find((g) => g.src === currentSrc);
+      const matchedGem = [...GEMS, ...ENVIRONMENTS].find((g) => g.src === currentSrc);
       if (matchedGem && matchedGem.href) {
         window.history.replaceState(null, '', matchedGem.href);
       }
@@ -237,7 +239,10 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
             className="relative w-full aspect-video shrink-0 lg:aspect-auto lg:flex-1 bg-black group overflow-hidden"
             onMouseMove={resetControlsTimeout}
             onMouseLeave={() => isPlaying && setShowControls(false)}
-            onClick={togglePlay}
+            onClick={(e) => {
+              const rootIsYoutube = !!currentSrc && (currentSrc.includes("youtube.com") || currentSrc.includes("youtu.be"));
+              if (!rootIsYoutube) togglePlay(e);
+            }}
         >
             {(!currentSrc) ? null : (currentSrc.includes("youtube.com") || currentSrc.includes("youtu.be")) ? (
                 <iframe
@@ -245,7 +250,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
                         currentSrc.includes("youtu.be") 
                             ? currentSrc.split("/").pop()?.split("?")[0]
                             : currentSrc.split("v=")[1]?.split("&")[0]
-                    }?autoplay=1&mute=${isMuted ? 1 : 0}&controls=0&rel=0`}
+                    }?autoplay=1&mute=${isMuted ? 1 : 0}&controls=1&rel=0`}
                     className="w-full h-full object-contain"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
@@ -282,7 +287,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
             )}
 
             {/* Center Play/Pause Button Overlay */}
-            {(!isPlaying || showControls) && (
+            {(!(!!currentSrc && (currentSrc.includes("youtube.com") || currentSrc.includes("youtu.be"))) && (!isPlaying || showControls)) && (
                 <div className={cn(
                     "absolute inset-0 flex items-center justify-center transition-all duration-300",
                     !isPlaying ? "bg-black/20 backdrop-blur-[1px]" : "bg-transparent pointer-events-none"
@@ -301,68 +306,70 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
             )}
 
             {/* Custom Controls Bar */}
-            <div 
-                className={cn(
-                    "absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/90 to-transparent p-4 md:p-6 pt-12 transition-opacity duration-300 flex flex-col gap-4",
-                    showControls ? "opacity-100" : "opacity-0"
-                )}
-                onClick={(e) => e.stopPropagation()}
-            >
-                {/* Progress Bar */}
+            {!(!!currentSrc && (currentSrc.includes("youtube.com") || currentSrc.includes("youtu.be"))) && (
                 <div 
-                    ref={progressRef}
-                    className="w-full h-4 cursor-pointer group/progress relative flex items-center"
-                    onClick={handleSeek}
+                    className={cn(
+                        "absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/90 to-transparent p-4 md:p-6 pt-12 transition-opacity duration-300 flex flex-col gap-4",
+                        showControls ? "opacity-100" : "opacity-0"
+                    )}
+                    onClick={(e) => e.stopPropagation()}
                 >
-                    <div className="w-full h-[2px] bg-white/20 rounded-full overflow-hidden">
+                    {/* Progress Bar */}
+                    <div 
+                        ref={progressRef}
+                        className="w-full h-4 cursor-pointer group/progress relative flex items-center"
+                        onClick={handleSeek}
+                    >
+                        <div className="w-full h-[2px] bg-white/20 rounded-full overflow-hidden">
+                            <div 
+                                className="h-full bg-[#f46b6b] relative"
+                                style={{ width: `${progress}%` }}
+                            />
+                        </div>
+                        {/* Scrub Handle */}
                         <div 
-                            className="h-full bg-[#f46b6b] relative"
-                            style={{ width: `${progress}%` }}
+                            className="absolute h-3 w-3 bg-[#f46b6b] rounded-full shadow-md opacity-0 group-hover/progress:opacity-100 transition-opacity transform scale-0 group-hover/progress:scale-100"
+                            style={{ left: `${progress}%`, transform: `translateX(-50%)` }}
                         />
                     </div>
-                    {/* Scrub Handle */}
-                    <div 
-                        className="absolute h-3 w-3 bg-[#f46b6b] rounded-full shadow-md opacity-0 group-hover/progress:opacity-100 transition-opacity transform scale-0 group-hover/progress:scale-100"
-                        style={{ left: `${progress}%`, transform: `translateX(-50%)` }}
-                    />
-                </div>
 
-                {/* Controls Row */}
-                <div className="flex items-center justify-between font-mono text-xs text-white uppercase tracking-wider">
-                    <div className="flex items-center gap-6">
-                        <button onClick={togglePlay} className="hover:text-[#f46b6b] transition-colors">
-                            {isPlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
-                        </button>
-                        
-                        <div className="flex items-center gap-2 opacity-60">
-                             <span>{formatTime(videoRef.current ? videoRef.current.currentTime : 0)}</span>
-                             <span>/</span>
-                             <span>{formatTime(duration)}</span>
+                    {/* Controls Row */}
+                    <div className="flex items-center justify-between font-mono text-xs text-white uppercase tracking-wider">
+                        <div className="flex items-center gap-6">
+                            <button onClick={togglePlay} className="hover:text-[#f46b6b] transition-colors">
+                                {isPlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+                            </button>
+                            
+                            <div className="flex items-center gap-2 opacity-60">
+                                 <span>{formatTime(videoRef.current ? videoRef.current.currentTime : 0)}</span>
+                                 <span>/</span>
+                                 <span>{formatTime(duration)}</span>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                            <button onClick={toggleMute} className="hover:text-[#f46b6b] transition-colors">
+                                {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                            </button>
+                            <button onClick={toggleFullscreen} className="hover:text-[#f46b6b] transition-colors">
+                                 {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                            </button>
                         </div>
                     </div>
-
-                    <div className="flex items-center gap-4">
-                        <button onClick={toggleMute} className="hover:text-[#f46b6b] transition-colors">
-                            {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                        </button>
-                        <button onClick={toggleFullscreen} className="hover:text-[#f46b6b] transition-colors">
-                             {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-                        </button>
-                    </div>
                 </div>
-            </div>
+            )}
         </div>
 
         {/* Sidebar */}
         <div className="flex-1 w-full lg:w-[360px] lg:flex-none bg-[#3f1d14] flex flex-col border-t lg:border-t-0 lg:border-l border-[#f46b6b]/10 overflow-hidden">
             {/* Header */}
             <div className="p-6 border-b border-[#f46b6b]/10 bg-[#3f1d14]">
-                <span className="font-serif text-lg text-[#f46b6b] tracking-wide">More Gems</span>
+                <span className="font-serif text-lg text-[#f46b6b] tracking-wide">{sidebarTitle}</span>
             </div>
 
             {/* Video List */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-6 flex flex-col gap-4 bg-[#3f1d14]">
-                {RELATED_VIDEOS.map((gem) => (
+                {relatedVideos.map((gem) => (
                     <div 
                         key={gem.id}
                         onClick={() => !gem.locked && gem.src && handleVideoChange(gem.src, gem.id)}
@@ -373,17 +380,44 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
                         )}
                     >
                         {/* Thumbnail */}
-                        <div className="relative w-[100px] aspect-video rounded-md overflow-hidden bg-black/20 shrink-0 border border-[#f46b6b]/10">
-                            <Image
-                                src={gem.image}
-                                alt={gem.title}
-                                fill
-                                className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                            />
+                        <div className="relative w-[100px] aspect-video rounded-md overflow-hidden bg-black/20 shrink-0 border border-[#f46b6b]/10 group-hover:border-[#f46b6b]/30 transition-colors">
+                            {gem.id.startsWith("e") && gem.src ? (
+                                <video
+                                    src={gem.src}
+                                    className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                                    preload="auto"
+                                    muted
+                                    playsInline
+                                    onLoadedMetadata={(e) => {
+                                        const video = e.target as HTMLVideoElement;
+                                        video.currentTime = 0.01;
+                                    }}
+                                />
+                            ) : (
+                                <Image
+                                    src={gem.image}
+                                    alt={gem.title}
+                                    fill
+                                    className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                                />
+                            )}
                             {/* Playing Indicator */}
                             {currentSrc === gem.src ? (
                                 <div className="absolute inset-0 bg-[#f46b6b]/20 flex items-center justify-center">
-                                    <div className="w-2 h-2 rounded-full bg-[#f46b6b] animate-pulse shadow-[0_0_10px_#f46b6b]" />
+                                    <svg 
+                                        className="w-5 h-5 text-[#f46b6b] drop-shadow-[0_0_8px_rgba(244,107,107,0.8)] animate-pulse"
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        viewBox="0 0 24 24" 
+                                        fill="none" 
+                                        stroke="currentColor" 
+                                        strokeWidth="2" 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M6 3h12l4 6-10 13L2 9Z" fill="currentColor" fillOpacity="0.2"/>
+                                        <path d="M11 3 8 9l4 13 4-13-3-6" />
+                                        <path d="M2 9h20" />
+                                    </svg>
                                 </div>
                             ) : (gem.locked || !gem.src) && (
                                 /* Coming Soon Overlay */
@@ -412,20 +446,22 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
             </div>
 
             {/* CTA */}
-            <div className="p-6 border-t border-[#f46b6b]/10 bg-[#371911]">
-                <a 
-                    href={currentBookingUrl ? (currentBookingUrl.startsWith('http') ? currentBookingUrl : `https://${currentBookingUrl}`) : "https://www.blueowlmedia.nz"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex w-full items-center justify-between p-4 rounded-lg bg-[#f46b6b] hover:bg-[#d65252] transition-colors text-white group shadow-lg shadow-[#f46b6b]/10"
-                >
-                    <div className="flex flex-col">
-                        <span className="font-serif font-bold text-sm">Book Your Stay</span>
-                        <span className="font-sans text-xs opacity-80">Experience Nomad Gems</span>
-                    </div>
-                    <ExternalLink size={18} className="opacity-80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </a>
-            </div>
+            {currentBookingUrl && (
+                <div className="p-6 border-t border-[#f46b6b]/10 bg-[#371911]">
+                    <a 
+                        href={currentBookingUrl.startsWith('http') ? currentBookingUrl : `https://${currentBookingUrl}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex w-full items-center justify-between p-4 rounded-lg bg-[#f46b6b] hover:bg-[#d65252] transition-colors text-white group shadow-lg shadow-[#f46b6b]/10"
+                    >
+                        <div className="flex flex-col">
+                            <span className="font-serif font-bold text-sm">Book Your Stay</span>
+                            <span className="font-sans text-xs opacity-80">Experience Nomad Gems</span>
+                        </div>
+                        <ExternalLink size={18} className="opacity-80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </a>
+                </div>
+            )}
         </div>
 
       </div>

@@ -7,7 +7,7 @@ import LatestGems from "@/components/LatestGems";
 import Link from "next/link";
 import Button from "@/components/Button";
 import BlogSection from "@/components/BlogSection";
-
+import EnvironmentCards from "@/components/EnvironmentCards";
 const imgCard = "/images/card_img.png";
 
 export default function Home() {
@@ -58,6 +58,9 @@ export default function Home() {
           </p>
         </div>
       </div>
+
+      {/* Environment Section */}
+      <EnvironmentCards />
 
       {/* Blog Section */}
       <BlogSection />

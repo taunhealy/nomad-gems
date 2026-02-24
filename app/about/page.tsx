@@ -163,6 +163,7 @@ export default function WorkPage() {
             <span className="font-sans text-xs md:text-sm uppercase tracking-[0.3em] text-[#f46b6b]">
               Our Principles
             </span>
+            <div className="w-12 h-px bg-[#f46b6b]/30"></div>
             <h2 className="font-serif font-medium text-[40px] md:text-[64px] text-white leading-tight">
               How We Think About Work
             </h2>

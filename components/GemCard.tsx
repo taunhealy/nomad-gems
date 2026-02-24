@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { Play } from "lucide-react";
 import { Gem } from "../lib/data";
 import Badge from "./Badge";
 
@@ -43,6 +44,7 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
   };
 
   const hasPlayableVideo = gem.src && !isYoutube(gem.src);
+  const isEnvironment = gem.id.startsWith("e");
 
   return (
     <div
@@ -54,16 +56,18 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
       {/* Image Container */}
       <div className="bg-white p-2 rounded-[16px] w-full aspect-3/2 relative overflow-hidden transition-all duration-500 hover:shadow-lg">
         <div className="relative w-full h-full rounded-[12px] overflow-hidden bg-gray-200">
-          <Image
-            alt={gem.title}
-            className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105 z-10"
-            src={gem.image}
-            fill
-          />
+          {!isEnvironment && (
+            <Image
+              alt={gem.title}
+              className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105 z-10"
+              src={gem.image}
+              fill
+            />
+          )}
 
           {/* Category Badge */}
           <div className="absolute top-4 left-4 md:left-4 z-40 pointer-events-none">
-            <Badge>{gem.category}</Badge>
+            <Badge>{gem.region || gem.category}</Badge>
           </div>
 
           {/* Hover Video Layer */}
@@ -71,12 +75,21 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
             <video
               ref={videoRef}
               src={gem.src}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 z-20 ${
-                isPlaying ? "opacity-100" : "opacity-0"
+              poster={isEnvironment ? undefined : gem.image}
+              preload="auto"
+              className={`absolute inset-0 w-full h-full object-cover z-20 ${
+                isEnvironment 
+                  ? "opacity-100" 
+                  : `transition-opacity duration-500 ${isPlaying ? "opacity-100" : "opacity-0"}`
               }`}
               muted
               playsInline
               loop
+              onLoadedMetadata={() => {
+                if (isEnvironment && videoRef.current) {
+                  videoRef.current.currentTime = 0.01;
+                }
+              }}
             />
           )}
 
@@ -106,13 +119,8 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
           {/* Play Button Overlay */}
           {!(gem.locked || gem.comingSoon) && gem.src && (
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-30">
-              <div className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-xl scale-75 group-hover:scale-100 transition-transform duration-500 ease-out">
-                <svg
-                  className="w-6 h-6 ml-1 text-black fill-current"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+              <div className="w-16 h-16 bg-[#f46b6b]/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform duration-500 ease-out">
+                <Play className="w-6 h-6 ml-1 text-white fill-white" />
               </div>
             </div>
           )}
