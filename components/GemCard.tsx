@@ -3,30 +3,54 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { Play } from "lucide-react";
-import { Gem } from "../lib/data";
+import { Gem, getYoutubeThumbnail, getYoutubeId } from "../lib/data";
 import Badge from "./Badge";
 
 interface GemCardProps {
   gem: Gem;
   onClick: (src?: string, bookingUrl?: string) => void;
+  variant?: "default" | "dark";
 }
 
-export default function GemCard({ gem, onClick }: GemCardProps) {
+export default function GemCard({ gem, onClick, variant = "default" }: GemCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  /** Iframe src set on hover — empty string = not mounted */
+  const [youtubeIframeSrc, setYoutubeIframeSrc] = useState("");
+
+  const isYoutube = (url?: string) =>
+    url ? url.includes("youtube.com") || url.includes("youtu.be") : false;
+
+  const hasPlayableVideo = !!gem.src && !isYoutube(gem.src);
+  const isYoutubeVideo   = !!gem.src && isYoutube(gem.src);
+  const isEnvironment    = gem.id.startsWith("e");
 
   const handleMouseEnter = () => {
     setIsHovered(true);
-    if (!(gem.locked || gem.comingSoon) && videoRef.current && gem.src && !isYoutube(gem.src)) {
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise
+    if (gem.locked || gem.comingSoon || !gem.src) return;
+
+    if (!isYoutubeVideo && videoRef.current) {
+      // MP4 / R2 — play the <video> element
+      const play = videoRef.current.play();
+      if (play !== undefined) {
+        play
           .then(() => setIsPlaying(true))
           .catch((err) => {
             console.warn("Autoplay prevented:", err);
             setIsPlaying(false);
           });
+      }
+    } else if (isYoutubeVideo) {
+      // YouTube — build an autoplay embed URL and mount the iframe
+      const videoId  = getYoutubeId(gem.src!);
+      const start    = gem.thumbnailTime ?? 0;
+      if (videoId) {
+        setYoutubeIframeSrc(
+          `https://www.youtube.com/embed/${videoId}` +
+          `?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}` +
+          `&start=${start}&rel=0&showinfo=0&modestbranding=1`
+        );
       }
     }
   };
@@ -37,14 +61,9 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
       videoRef.current.pause();
       setIsPlaying(false);
     }
+    // Unmount iframe → stops YT playback immediately
+    setYoutubeIframeSrc("");
   };
-
-  const isYoutube = (url?: string) => {
-    return url ? url.includes("youtube.com") || url.includes("youtu.be") : false;
-  };
-
-  const hasPlayableVideo = gem.src && !isYoutube(gem.src);
-  const isEnvironment = gem.id.startsWith("e");
 
   return (
     <div
@@ -54,14 +73,21 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
       onMouseLeave={handleMouseLeave}
     >
       {/* Image Container */}
-      <div className="bg-white p-2 rounded-[16px] w-full aspect-3/2 relative overflow-hidden transition-all duration-500 hover:shadow-lg">
-        <div className="relative w-full h-full rounded-[12px] overflow-hidden bg-gray-200">
-          {!isEnvironment && (
+      <div className={`${variant === 'dark' ? 'w-full aspect-3/2 relative overflow-hidden transition-all duration-500 hover:shadow-lg rounded-[12px]' : 'bg-white p-2 rounded-[16px] w-full aspect-3/2 relative overflow-hidden transition-all duration-500 hover:shadow-lg'}`}>
+        <div className={`relative w-full h-full rounded-[12px] overflow-hidden ${variant === 'dark' ? 'bg-[#3f1d14]' : 'bg-gray-200'}`}>
+
+          {/* Static thumbnail image — shown for non-video cards or as fallback for YouTube cards */}
+          {(!hasPlayableVideo) && (
             <Image
               alt={gem.title}
-              className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105 z-10"
-              src={gem.image}
+              className={`object-cover z-10 transition-all duration-700 ease-out ${
+                isYoutubeVideo && isHovered
+                  ? "opacity-0 scale-100"          // fade out once iframe is shown
+                  : "opacity-100 group-hover:scale-105"
+              }`}
+              src={isYoutubeVideo ? getYoutubeThumbnail(gem.src!) : (gem.image || "")}
               fill
+              unoptimized={isYoutubeVideo} 
             />
           )}
 
@@ -70,28 +96,37 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
             <Badge>{gem.region || gem.category}</Badge>
           </div>
 
-          {/* Hover Video Layer */}
+          {/* Video Layer — MP4 / R2 (Shows as thumbnail when not playing) */}
           {hasPlayableVideo && !(gem.locked || gem.comingSoon) && (
             <video
               ref={videoRef}
               src={gem.src}
-              poster={isEnvironment ? undefined : gem.image}
+              poster={gem.image || ""}
               preload="auto"
-              className={`absolute inset-0 w-full h-full object-cover z-20 ${
-                isEnvironment 
-                  ? "opacity-100" 
-                  : `transition-opacity duration-500 ${isPlaying ? "opacity-100" : "opacity-0"}`
-              }`}
+              className="absolute inset-0 w-full h-full object-cover z-20 opacity-100"
               muted
               playsInline
               loop
               onLoadedMetadata={() => {
-                if (isEnvironment && videoRef.current) {
-                  videoRef.current.currentTime = 0.01;
+                if (videoRef.current) {
+                  videoRef.current.currentTime = gem.thumbnailTime ?? 0.01;
                 }
               }}
             />
           )}
+
+          {/* Hover Video Layer — YouTube iframe */}
+          {isYoutubeVideo && !(gem.locked || gem.comingSoon) && youtubeIframeSrc && (
+            <iframe
+              src={youtubeIframeSrc}
+              className={`absolute inset-0 w-full h-full z-20 pointer-events-none transition-opacity duration-500 ${
+                isHovered ? "opacity-100" : "opacity-0"
+              }`}
+              allow="autoplay; encrypted-media"
+              style={{ border: "none" }}
+            />
+          )}
+
 
           {/* Locked State Overlay */}
           {(gem.locked || gem.comingSoon) && (
@@ -131,11 +166,11 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
       <div className="flex justify-between items-center gap-4 w-full text-left mt-2">
         <div className="shrink grid gap-0.5">
           <p>
-            <span className={`font-serif lg:text-3xl text-xl tracking-tighter leading-tight text-black transition-all ${!(gem.locked || gem.comingSoon) ? "group-hover:underline decoration-1 underline-offset-4" : ""}`}>
+            <span className={`font-serif lg:text-3xl text-xl tracking-tighter leading-tight transition-all ${variant === 'dark' ? 'text-white' : 'text-black'} ${!(gem.locked || gem.comingSoon) ? "group-hover:underline decoration-1 underline-offset-4" : ""}`}>
               {gem.title}
             </span>
           </p>
-          <p className="font-sans text-xs tracking-widest uppercase text-black/60">
+          <p className={`font-sans text-xs tracking-widest uppercase ${variant === 'dark' ? 'text-white/60' : 'text-black/60'}`}>
             {gem.location}
           </p>
         </div>
@@ -143,7 +178,7 @@ export default function GemCard({ gem, onClick }: GemCardProps) {
         <div className="flex flex-row items-center shrink-0">
           {!(gem.locked || gem.comingSoon) && (
               <svg
-                className="w-5 h-5 transform transition-transform duration-300 group-hover:translate-x-1 text-black"
+                className={`w-5 h-5 transform transition-transform duration-300 group-hover:translate-x-1 ${variant === 'dark' ? 'text-white' : 'text-black'}`}
                 viewBox="0 0 21 20"
                 stroke="currentColor"
                 fill="none"

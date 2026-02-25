@@ -246,11 +246,12 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
         >
             {(!currentSrc) ? null : (currentSrc.includes("youtube.com") || currentSrc.includes("youtu.be")) ? (
                 <iframe
-                    src={`https://www.youtube.com/embed/${
-                        currentSrc.includes("youtu.be") 
-                            ? currentSrc.split("/").pop()?.split("?")[0]
-                            : currentSrc.split("v=")[1]?.split("&")[0]
-                    }?autoplay=1&mute=${isMuted ? 1 : 0}&controls=1&rel=0`}
+                    src={(() => {
+                      const videoId = currentSrc.includes("youtu.be")
+                        ? currentSrc.split("/").pop()?.split("?")[0]
+                        : currentSrc.split("v=")[1]?.split("&")[0];
+                      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${isMuted ? 1 : 0}&controls=1&rel=0`;
+                    })()}
                     className="w-full h-full object-contain"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
@@ -381,7 +382,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
                     >
                         {/* Thumbnail */}
                         <div className="relative w-[100px] aspect-video rounded-md overflow-hidden bg-black/20 shrink-0 border border-[#f46b6b]/10 group-hover:border-[#f46b6b]/30 transition-colors">
-                            {gem.id.startsWith("e") && gem.src ? (
+                            {(gem.id.startsWith("e") && gem.src && !(gem.src.includes("youtube.com") || gem.src.includes("youtu.be"))) ? (
                                 <video
                                     src={gem.src}
                                     className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
@@ -390,7 +391,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
                                     playsInline
                                     onLoadedMetadata={(e) => {
                                         const video = e.target as HTMLVideoElement;
-                                        video.currentTime = 0.01;
+                                        video.currentTime = gem.thumbnailTime ?? 0.01;
                                     }}
                                 />
                             ) : (

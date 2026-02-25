@@ -20,11 +20,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const [isGemsOpen, setIsGemsOpen] = useState(false);
-  const [isEnvironmentsOpen, setIsEnvironmentsOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isMapOpen, setIsMapOpen] = useState(false);
-  const [isBlogOpen, setIsBlogOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -161,18 +158,19 @@ export default function Navbar() {
             </div>
         </div>
 
-        {/* Gems — mega menu */}
+
+        {/* Map */}
         <div 
             className="h-full flex items-center"
-            onMouseEnter={() => setIsGemsOpen(true)}
-            onMouseLeave={() => setIsGemsOpen(false)}
+            onMouseEnter={() => setIsMapOpen(true)}
+            onMouseLeave={() => setIsMapOpen(false)}
         >
             <Link
-            href="/work"
-            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isGemsOpen ? "text-black" : "text-black/60 hover:text-black") : (isGemsOpen ? "text-white" : "text-white/80 hover:text-white")}`}
+            href="/map"
+            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isMapOpen ? "text-black" : "text-black/60 hover:text-black") : (isMapOpen ? "text-white" : "text-white/80 hover:text-white")}`}
             >
             <span className="relative">
-              Stays
+              Gems
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f46b6b] transition-all duration-300 group-hover:w-full" />
             </span>
             </Link>
@@ -180,7 +178,7 @@ export default function Navbar() {
             {/* Scale-in Mega Menu */}
             <div 
                 className={`absolute left-0 top-[80px] w-full bg-white border-b border-black/5 shadow-xl transition-all duration-300 origin-top overflow-hidden ${
-                    isGemsOpen ? "opacity-100 visible max-h-[600px]" : "opacity-0 invisible max-h-0"
+                    isMapOpen ? "opacity-100 visible max-h-[600px]" : "opacity-0 invisible max-h-0"
                 }`}
             >
                 <div className="w-full max-w-[1440px] mx-auto px-6 md:px-[90px] py-12 flex flex-col gap-8">
@@ -209,120 +207,6 @@ export default function Navbar() {
             </div>
         </div>
 
-        {/* Environments — mega menu */}
-        <div 
-            className="h-full flex items-center"
-            onMouseEnter={() => setIsEnvironmentsOpen(true)}
-            onMouseLeave={() => setIsEnvironmentsOpen(false)}
-        >
-            <Link
-            href="/work?tab=environments"
-            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isEnvironmentsOpen ? "text-black" : "text-black/60 hover:text-black") : (isEnvironmentsOpen ? "text-white" : "text-white/80 hover:text-white")}`}
-            >
-            <span className="relative">
-              Environments
-              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f46b6b] transition-all duration-300 group-hover:w-full" />
-            </span>
-            </Link>
-
-            {/* Scale-in Mega Menu */}
-            <div 
-                className={`absolute left-0 top-[80px] w-full bg-white border-b border-black/5 shadow-xl transition-all duration-300 origin-top overflow-hidden ${
-                    isEnvironmentsOpen ? "opacity-100 visible max-h-[600px]" : "opacity-0 invisible max-h-0"
-                }`}
-            >
-                <div className="w-full max-w-[1440px] mx-auto px-6 md:px-[90px] py-12 flex flex-col gap-8">
-                    <div className="flex items-center justify-between border-b border-black/10 pb-4">
-                        <span className="font-serif font-medium text-2xl text-black">Explore Environments</span>
-                        <ArrowLink text="View Full Collection" href="/work" />
-                    </div>
-                    
-                    <div className="grid grid-cols-4 gap-8">
-                        {ENVIRONMENTS.slice(0, 4).map((gem) => (
-                            <div key={gem.id} className="w-full">
-                                <GemCard 
-                                    gem={gem} 
-                                    onClick={(src, bookingUrl) => {
-                                        if (src) {
-                                            setCurrentVideoSrc(src);
-                                            setCurrentBookingUrl(bookingUrl || "");
-                                            setIsModalOpen(true);
-                                        }
-                                    }} 
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {/* Map */}
-        <div 
-            className="h-full flex items-center"
-            onMouseEnter={() => setIsMapOpen(true)}
-            onMouseLeave={() => setIsMapOpen(false)}
-        >
-            <Link
-            href="/map"
-            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isMapOpen ? "text-black" : "text-black/60 hover:text-black") : (isMapOpen ? "text-white" : "text-white/80 hover:text-white")}`}
-            >
-            <span className="relative">
-              Map
-              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f46b6b] transition-all duration-300 group-hover:w-full" />
-            </span>
-            </Link>
-        </div>
-
-        {/* Blog — mega menu */}
-        <div 
-            className="h-full flex items-center"
-            onMouseEnter={() => setIsBlogOpen(true)}
-            onMouseLeave={() => setIsBlogOpen(false)}
-        >
-            <Link
-            href="/#blog"
-            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isBlogOpen ? "text-black" : "text-black/60 hover:text-black") : (isBlogOpen ? "text-white" : "text-white/80 hover:text-white")}`}
-            >
-            <span className="relative">
-              Blog
-              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f46b6b] transition-all duration-300 group-hover:w-full" />
-            </span>
-            </Link>
-
-            {/* Scale-in Mega Menu */}
-            <div 
-                className={`absolute left-0 top-[80px] w-full bg-white border-b border-black/5 shadow-xl transition-all duration-300 origin-top overflow-hidden ${
-                    isBlogOpen ? "opacity-100 visible max-h-[600px]" : "opacity-0 invisible max-h-0"
-                }`}
-            >
-                <div className="w-full max-w-[1440px] mx-auto px-6 md:px-[90px] py-12 flex flex-col gap-8">
-                    <div className="flex items-center justify-between border-b border-black/10 pb-4">
-                        <span className="font-serif font-medium text-2xl text-black">Insights & Strategies</span>
-                        <ArrowLink text="Read All Posts" href="/#blog" />
-                    </div>
-                    
-                    <div className="grid grid-cols-3 gap-8">
-                        {BLOG_POSTS.slice(0, 3).map((post) => (
-                            <Link key={post.id} href={`/blog/${post.slug}`} className="group/item flex flex-col gap-4">
-                                <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
-                                    <Image 
-                                      src={post.image} 
-                                      alt={post.title} 
-                                      fill 
-                                      className="object-cover transition-transform duration-500 group-hover/item:scale-105" 
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="font-sans text-[10px] uppercase tracking-widest text-[#f46b6b]">{post.category}</span>
-                                    <h4 className="font-serif text-lg text-black leading-tight group-hover/item:text-[#f46b6b] transition-colors">{post.title}</h4>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        </div>
 
         {/* Contact — mega menu */}
         <div 
@@ -411,33 +295,13 @@ export default function Navbar() {
             About
           </Link>
           <Link
-            href="/work"
-            onClick={() => setIsMenuOpen(false)}
-            className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
-          >
-            Stays
-          </Link>
-          <Link
-            href="/work?tab=environments"
-            onClick={() => setIsMenuOpen(false)}
-            className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
-          >
-            Environments
-          </Link>
-          <Link
             href="/map"
             onClick={() => setIsMenuOpen(false)}
             className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
           >
-            Map
+            Gems
           </Link>
-          <Link
-            href="/#blog"
-            onClick={() => setIsMenuOpen(false)}
-            className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
-          >
-            Blog
-          </Link>
+          
           <Link
             href="#contact"
             onClick={(e) => {
@@ -452,6 +316,27 @@ export default function Navbar() {
           >
             Contact
           </Link>
+
+          {/* Featured Gem in Mobile Menu */}
+          <div className="w-full mt-8 opacity-0">
+            <span className="font-sans text-[10px] uppercase tracking-widest text-[#f46b6b] mb-4 block">Featured Gem</span>
+            <div className="w-full max-w-[320px]">
+               <GemCard 
+                  gem={GEMS[0]} 
+                  variant="dark"
+                  onClick={(src, bookingUrl) => {
+                      setIsMenuOpen(false);
+                      if (src) {
+                          setCurrentVideoSrc(src);
+                          setCurrentBookingUrl(bookingUrl || "");
+                          setIsModalOpen(true);
+                      } else if (bookingUrl) {
+                          window.open(bookingUrl, "_blank");
+                      }
+                  }} 
+               />
+            </div>
+          </div>
         </div>
 
         <div ref={footerRef} className="flex flex-col gap-6 border-t border-white/10 pt-8 opacity-0">

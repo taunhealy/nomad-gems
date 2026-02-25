@@ -4,14 +4,30 @@ export type Gem = {
   location: string;
   category: "Villa" | "Cabin" | "Cottage" | "All";
   region?: string;
-  image: string;
+  image?: string;
   href: string;
   src?: string;
   locked?: boolean;
   comingSoon?: boolean;
   bookingUrl?: string;
   coordinates?: [number, number];
+  /** Time in seconds to seek to for thumbnail previews and embed start */
+  thumbnailTime?: number;
 };
+
+/** Extract a YouTube video ID from various YouTube URL formats */
+export function getYoutubeId(url: string | null): string | null {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
+/** Get the high-quality YouTube thumbnail URL */
+export function getYoutubeThumbnail(url: string | null): string {
+  const id = getYoutubeId(url);
+  return id ? `https://img.youtube.com/vi/${id}/maxresdefault.jpg` : "";
+}
 
 export const GEMS: Gem[] = [
   {
@@ -20,36 +36,12 @@ export const GEMS: Gem[] = [
     location: "Cape Town, South Africa",
     category: "Villa",
     coordinates: [-33.9249, 18.4241],
-    image: "https://assets.blueowlmedia.nz/Screenshot%202026-02-16%20163918.png",
     href: "/gems/francolin-house",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Tour_Healy-House-creator.mp4",
     locked: false,
     bookingUrl: "https://www.blueowlmedia.nz",
   },
-  {
-    id: "g2",
-    title: "Beach Villa",
-    location: "Western Cape, Cape Town",
-    category: "Villa",
-    coordinates: [-33.957, 18.376],
-    image: "https://images.unsplash.com/photo-1543489822-c49534f3271f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    href: "/gems/beach-villa",
-    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_2026_Showreel-1_4K-Credits-web.mp4", // Placeholder
-    locked: true,
-    bookingUrl: "",
-  },
-  {
-    id: "g3",
-    title: "Lake Cabin",
-    location: "Lake Louise, AB, Canada",
-    category: "Cabin",
-    coordinates: [51.4254, -116.1773],
-    image: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?q=80&w=1888&auto=format&fit=crop",
-    href: "/gems/lake-cabin",
-    src: "",
-    locked: true,
-    bookingUrl: "",
-  },
+
   {
     id: "g4",
     title: "Waterfall Farm",
@@ -61,18 +53,6 @@ export const GEMS: Gem[] = [
     src: "",
     comingSoon: true,
     bookingUrl: "",
-  },
-  {
-    id: "g5",
-    title: "360 on 62",
-    location: "Montagu, South Africa",
-    category: "Cottage",
-    coordinates: [-33.7845, 20.1173],
-    image: "https://www.360on62.co.za/images/2024farmhouse.jpg",
-    href: "https://www.360on62.co.za/",
-    src: "",
-    comingSoon: true,
-    bookingUrl: "https://www.360on62.co.za/",
   },
   {
     id: "g6",
@@ -94,7 +74,6 @@ export const ENVIRONMENTS: Gem[] = [
     category: "All",
     coordinates: [-34.664, 20.231],
     region: "Western Cape",
-    image: "https://images.unsplash.com/photo-1546948630-1149ea60dc86?q=80&w=1920&auto=format&fit=crop",
     href: "#",
     src: "https://assets.blueowlmedia.nz/Blue-Owl%20Media%20Environment%20Arniston%20Dunes-Coast-Compressed.mp4",
     locked: false,
@@ -107,7 +86,6 @@ export const ENVIRONMENTS: Gem[] = [
     category: "All",
     coordinates: [-34.793, 20.057],
     region: "Western Cape",
-    image: "https://images.unsplash.com/photo-1506477331477-33d5d8b3dc85?auto=format&fit=crop&q=80&w=1920",
     href: "#",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media%20Content%20Struisbaai-Harbour%20Short-Compressed.mp4",
     locked: false,
@@ -120,7 +98,6 @@ export const ENVIRONMENTS: Gem[] = [
     category: "All",
     coordinates: [-34.664, 20.22],
     region: "Western Cape",
-    image: "https://images.unsplash.com/photo-1506477331477-33d5d8b3dc85?auto=format&fit=crop&q=80&w=1920",
     href: "#",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Environment_ArnistonCoast-Sunset-web.mp4",
     locked: false,
@@ -133,9 +110,21 @@ export const ENVIRONMENTS: Gem[] = [
     category: "All",
     coordinates: [-34.829, 20.009],
     region: "Western Cape",
-    image: "https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=1920",
     href: "#",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Shorts_Environ_Cape-Agulhas-Lighthouse.mp4",
+    locked: false,
+    bookingUrl: ""
+  },
+  {
+    id: "e5",
+    title: "Grotto Beach",
+    location: "Hermanus, South Africa",
+    category: "All",
+    coordinates: [-34.4135, 19.2876],
+    region: "Western Cape",
+    href: "#",
+    src: "https://youtu.be/ClCZ7VOwnn0",
+    thumbnailTime: 10,
     locked: false,
     bookingUrl: ""
   }
