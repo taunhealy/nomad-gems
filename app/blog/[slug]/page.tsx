@@ -6,6 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Calendar, Clock } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { BLOG_POSTS } from "@/lib/blog-data";
 
 export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -151,6 +152,8 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
           </div>
         </article>
       </main>
+
+      <Footer />
     </div>
   );
 }

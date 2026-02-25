@@ -7,6 +7,7 @@ import GemCard from "@/components/GemCard";
 import { VideoModal } from "@/components/VideoModal";
 import { GEMS } from "@/lib/data";
 import { Gem } from "lucide-react";
+import Footer from "@/components/Footer";
 
 const categories = ["All", "Cottage", "Villa", "Cabin"];
 
@@ -82,6 +83,8 @@ export default function WorkPage() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

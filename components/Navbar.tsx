@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import ArrowLink from "./ArrowLink";
 import GemCard from "./GemCard";
@@ -12,12 +13,17 @@ import { GEMS, ENVIRONMENTS } from "@/lib/data";
 import { BLOG_POSTS } from "@/lib/blog-data";
 import Image from "next/image";
 
+// Pages that don't scroll — navbar should always be solid on these
+const ALWAYS_SOLID_PATHS = ["/map"];
+
 export default function Navbar() {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isGemsOpen, setIsGemsOpen] = useState(false);
   const [isEnvironmentsOpen, setIsEnvironmentsOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isMapOpen, setIsMapOpen] = useState(false);
   const [isBlogOpen, setIsBlogOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -87,7 +93,8 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isSolid = (isHovered || isScrolled) && !isMenuVisible;
+  const alwaysSolid = ALWAYS_SOLID_PATHS.includes(pathname);
+  const isSolid = (alwaysSolid || isHovered || isScrolled) && !isMenuVisible;
 
   return (
     <nav 
@@ -250,6 +257,23 @@ export default function Navbar() {
             </div>
         </div>
 
+        {/* Map */}
+        <div 
+            className="h-full flex items-center"
+            onMouseEnter={() => setIsMapOpen(true)}
+            onMouseLeave={() => setIsMapOpen(false)}
+        >
+            <Link
+            href="/map"
+            className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isMapOpen ? "text-black" : "text-black/60 hover:text-black") : (isMapOpen ? "text-white" : "text-white/80 hover:text-white")}`}
+            >
+            <span className="relative">
+              Map
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f46b6b] transition-all duration-300 group-hover:w-full" />
+            </span>
+            </Link>
+        </div>
+
         {/* Blog — mega menu */}
         <div 
             className="h-full flex items-center"
@@ -399,6 +423,13 @@ export default function Navbar() {
             className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
           >
             Environments
+          </Link>
+          <Link
+            href="/map"
+            onClick={() => setIsMenuOpen(false)}
+            className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
+          >
+            Map
           </Link>
           <Link
             href="/#blog"

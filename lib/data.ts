@@ -10,6 +10,7 @@ export type Gem = {
   locked?: boolean;
   comingSoon?: boolean;
   bookingUrl?: string;
+  coordinates?: [number, number];
 };
 
 export const GEMS: Gem[] = [
@@ -18,6 +19,7 @@ export const GEMS: Gem[] = [
     title: "Francolin House",
     location: "Cape Town, South Africa",
     category: "Villa",
+    coordinates: [-33.9249, 18.4241],
     image: "https://assets.blueowlmedia.nz/Screenshot%202026-02-16%20163918.png",
     href: "/gems/francolin-house",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Tour_Healy-House-creator.mp4",
@@ -29,6 +31,7 @@ export const GEMS: Gem[] = [
     title: "Beach Villa",
     location: "Western Cape, Cape Town",
     category: "Villa",
+    coordinates: [-33.957, 18.376],
     image: "https://images.unsplash.com/photo-1543489822-c49534f3271f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     href: "/gems/beach-villa",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_2026_Showreel-1_4K-Credits-web.mp4", // Placeholder
@@ -40,6 +43,7 @@ export const GEMS: Gem[] = [
     title: "Lake Cabin",
     location: "Lake Louise, AB, Canada",
     category: "Cabin",
+    coordinates: [51.4254, -116.1773],
     image: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?q=80&w=1888&auto=format&fit=crop",
     href: "/gems/lake-cabin",
     src: "",
@@ -51,6 +55,7 @@ export const GEMS: Gem[] = [
     title: "Waterfall Farm",
     location: "Western Cape, South Africa",
     category: "Cottage",
+    coordinates: [-33.8, 19.5],
     image: "https://a0.muscache.com/im/pictures/miso/Hosting-1097507241005856448/original/07c34bde-e3c3-4396-99f4-d344c6b9113c.jpeg?im_w=720",
     href: "#",
     src: "",
@@ -62,6 +67,7 @@ export const GEMS: Gem[] = [
     title: "360 on 62",
     location: "Montagu, South Africa",
     category: "Cottage",
+    coordinates: [-33.7845, 20.1173],
     image: "https://www.360on62.co.za/images/2024farmhouse.jpg",
     href: "https://www.360on62.co.za/",
     src: "",
@@ -73,6 +79,7 @@ export const GEMS: Gem[] = [
     title: "Big Sky Cottages",
     location: "Tulbagh, South Africa",
     category: "Cottage",
+    coordinates: [-33.284, 19.136],
     image: "https://i0.wp.com/bigskycottages.co.za/wp-content/uploads/2020/10/LIGHT-LOUNGE-STUDIO-304-scaled.jpg?resize=1920%2C1080&ssl=1",
     href: "https://bigskycottages.co.za/",
     src: "",
@@ -85,6 +92,7 @@ export const ENVIRONMENTS: Gem[] = [
     title: "Arniston Dunes",
     location: "Western Cape, South Africa",
     category: "All",
+    coordinates: [-34.664, 20.231],
     region: "Western Cape",
     image: "https://images.unsplash.com/photo-1546948630-1149ea60dc86?q=80&w=1920&auto=format&fit=crop",
     href: "#",
@@ -97,6 +105,7 @@ export const ENVIRONMENTS: Gem[] = [
     title: "Struisbaai Harbour",
     location: "Western Cape, South Africa",
     category: "All",
+    coordinates: [-34.793, 20.057],
     region: "Western Cape",
     image: "https://images.unsplash.com/photo-1506477331477-33d5d8b3dc85?auto=format&fit=crop&q=80&w=1920",
     href: "#",
@@ -109,6 +118,7 @@ export const ENVIRONMENTS: Gem[] = [
     title: "Arniston Cliffs",
     location: "Western Cape, South Africa",
     category: "All",
+    coordinates: [-34.664, 20.22],
     region: "Western Cape",
     image: "https://images.unsplash.com/photo-1506477331477-33d5d8b3dc85?auto=format&fit=crop&q=80&w=1920",
     href: "#",
@@ -121,6 +131,7 @@ export const ENVIRONMENTS: Gem[] = [
     title: "Cape Agulhas Lighthouse",
     location: "Western Cape, South Africa",
     category: "All",
+    coordinates: [-34.829, 20.009],
     region: "Western Cape",
     image: "https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=1920",
     href: "#",

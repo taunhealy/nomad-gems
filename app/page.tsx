@@ -8,6 +8,7 @@ import Link from "next/link";
 import Button from "@/components/Button";
 import BlogSection from "@/components/BlogSection";
 import EnvironmentCards from "@/components/EnvironmentCards";
+import Footer from "@/components/Footer";
 const imgCard = "/images/card_img.png";
 
 export default function Home() {
@@ -64,6 +65,8 @@ export default function Home() {
 
       {/* Blog Section */}
       <BlogSection />
+
+      <Footer />
     </div>
   );
 }

@@ -50,7 +50,7 @@ export default function Footer() {
       {/* Bottom Row */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 font-sans text-white/50 text-sm tracking-widest uppercase w-full">
          <span>© 2026 Nomad Gems. All Rights Reserved. Built By Kea Logic.</span>
-         <span className="font-bold text-[#c73f3b] opacity-80 cursor-pointer hover:opacity-100 transition-opacity">Follow on Youtube</span>
+         <Link href="https://www.youtube.com/@nomad-gems" target="_blank" rel="noopener noreferrer" className="font-bold text-[#c73f3b] opacity-80 cursor-pointer hover:opacity-100 transition-opacity">Follow on Youtube</Link>
       </div>
 
     </footer>
