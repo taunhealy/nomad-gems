@@ -90,6 +90,15 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isMenuOpen]);
+
   const alwaysSolid = ALWAYS_SOLID_PATHS.includes(pathname);
   const isSolid = (alwaysSolid || isHovered || isScrolled) && !isMenuVisible;
 
@@ -284,9 +293,9 @@ export default function Navbar() {
       {/* Mobile Menu Overlay */}
       <div 
         ref={containerRef}
-        className="fixed inset-0 bg-[#3f1d14] flex flex-col justify-between p-8 pt-[120px] md:hidden z-[100] translate-x-full"
+        className="fixed inset-0 bg-[#3f1d14] flex flex-col p-8 pt-[120px] md:hidden z-[100] translate-x-full overflow-y-auto"
       >
-        <div ref={linksRef} className="flex flex-col gap-8 items-start">
+        <div ref={linksRef} className="flex flex-col gap-6 md:gap-8 items-start pb-8">
           <Link
             href="/about"
             onClick={() => setIsMenuOpen(false)}
@@ -339,7 +348,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div ref={footerRef} className="flex flex-col gap-6 border-t border-white/10 pt-8 opacity-0">
+        <div ref={footerRef} className="flex flex-col gap-6 border-t border-white/10 pt-8 opacity-0 mt-auto pb-4">
             <div className="flex flex-col gap-2">
                 <span className="font-sans text-xs uppercase tracking-[0.2em] text-[#f46b6b]">Contact</span>
                 <a href="mailto:hello@blueowlmedia.nz" className="font-sans text-lg text-white/60">hello@blueowlmedia.nz</a>
