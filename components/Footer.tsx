@@ -33,6 +33,7 @@ export default function Footer() {
                   type="email" 
                   placeholder="Email Address" 
                   className="h-[56px] w-full md:w-[280px] bg-[#ffcbcb] rounded-full px-8 font-sans text-black placeholder:text-black/50 focus:outline-none focus:ring-2 focus:ring-[#f46b6b] transition-all"
+                  suppressHydrationWarning
                 />
                 <div className="w-full md:w-auto">
                   <Button variant="primary" size="lg" rounded={false} className="w-full md:w-auto">

@@ -15,6 +15,7 @@ export default function TabFilter({ tabs, activeTab, onTabChange, className = ""
           key={tab}
           onClick={() => onTabChange(tab)}
           className="relative group py-2 cursor-pointer"
+          suppressHydrationWarning
         >
           <span
             className={`font-serif text-[24px] capitalize transition-colors duration-300 ${

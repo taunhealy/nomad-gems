@@ -5,7 +5,7 @@ import Image from "next/image";
 import { X, Play, Pause, Volume2, VolumeX, Maximize2, Minimize2, ExternalLink, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { GEMS, ENVIRONMENTS, Gem } from "../lib/data";
+import { GEMS, ENVIRONMENTS, Gem, getYoutubeThumbnail } from "../lib/data";
 import Button from "./Button";
 
 interface VideoModalProps {
@@ -382,7 +382,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
                     >
                         {/* Thumbnail */}
                         <div className="relative w-[100px] aspect-video rounded-md overflow-hidden bg-black/20 shrink-0 border border-[#f46b6b]/10 group-hover:border-[#f46b6b]/30 transition-colors">
-                            {(gem.id.startsWith("e") && gem.src && !(gem.src.includes("youtube.com") || gem.src.includes("youtu.be"))) ? (
+                            {(gem.src && !(gem.src.includes("youtube.com") || gem.src.includes("youtu.be"))) ? (
                                 <video
                                     src={gem.src}
                                     className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
@@ -396,7 +396,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
                                 />
                             ) : (
                                 <Image
-                                    src={gem.image}
+                                    src={(gem.src && (gem.src.includes("youtube.com") || gem.src.includes("youtu.be"))) ? getYoutubeThumbnail(gem.src) : (gem.image || "")}
                                     alt={gem.title}
                                     fill
                                     className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"

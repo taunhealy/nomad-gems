@@ -89,6 +89,7 @@ export default function BlogSection() {
                     ? "bg-[#f46b6b] text-white"
                     : "bg-black/5 text-black/50 hover:bg-black/10 hover:text-black/70"
                 }`}
+                suppressHydrationWarning
               >
                 {filter}
               </button>

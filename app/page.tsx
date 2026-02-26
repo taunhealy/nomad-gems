@@ -45,6 +45,7 @@ export default function Home() {
               type="email" 
               placeholder="Your Email Address" 
               className="h-[56px] w-full md:w-[380px] bg-[#fff0e6] rounded-full px-8 font-sans text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-[#f46b6b] transition-all border border-[#f46b6b]/20"
+              suppressHydrationWarning
             />
             <div className="w-full md:w-auto">
               <Button variant="primary" size="lg" className="w-full md:w-auto">
