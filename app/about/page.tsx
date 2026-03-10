@@ -53,7 +53,7 @@ const principles = [
     number: "01",
     title: "Work comes first.",
     description:
-      "We don't compromise on connectivity or workspace quality. Every gem is a productivity-first environment.",
+      "We don't compromise on the essentials. Every gem is a verified spot where you can stay productive while soaking in the surroundings.",
   },
   {
     number: "02",
@@ -102,7 +102,7 @@ export default function WorkPage() {
             Work Without Walls
           </h1>
           <p className="font-sans text-[16px] md:text-lg text-white/60 max-w-[520px] text-center leading-relaxed">
-            Curated stays designed for deep work, surrounded by the kind of nature that makes you feel alive.
+            Nature retreats that are 'good enough' to get work done, surrounded by the kind of wild beauty that makes you feel alive.
           </p>
           <div className="flex flex-col md:flex-row items-center gap-4 mt-8 w-full md:w-auto">
             <div className="w-full md:w-auto">
@@ -131,7 +131,7 @@ export default function WorkPage() {
               Built for Deep Work
             </h2>
             <p className="font-sans text-[18px] text-[#4a4a4a] max-w-[500px] leading-relaxed">
-              Every Nomad Gem is rigorously checked against our work-readiness standard.
+              We check the workation essentials—reliable connectivity and a quiet spot to focus.
             </p>
           </div>
 
@@ -219,7 +219,7 @@ export default function WorkPage() {
             Find Your Next<br />Work Sanctuary
           </h2>
           <p className="font-sans text-[16px] md:text-[18px] text-[#4a4a4a] max-w-[500px] leading-relaxed">
-            Browse our curated collection of verified, work-ready retreats in nature.
+            Browse our collection of verified, workation-ready retreats in nature.
           </p>
           <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
             <div className="w-full md:w-auto">

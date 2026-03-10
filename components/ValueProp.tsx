@@ -17,7 +17,7 @@ const content: Record<Audience, {
     heading: "Work in nature.",
     tagline: "(for digital nomads seeking deep work)",
     description:
-      "Nomad Gems curates exclusive, work-ready sanctuaries designed for the modern professional. Each location is verified for high-speed connectivity, ergonomic comfort, and natural beauty, ensuring you can perform at your best while recharging in nature.",
+      "Nomad Gems discovers nature retreats that are 'good enough' to get work done. We focus on the workation essentials—reliable connectivity and a quiet spot to focus—ensuring you have the bare minimum to stay productive while you truly rejuvenate in nature.",
     amenities: [
       { icon: Wifi, label: "Fast Wifi" },
       { icon: Monitor, label: "Workspace" },

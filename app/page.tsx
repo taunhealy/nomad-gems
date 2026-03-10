@@ -4,6 +4,7 @@ import ValueProp from "@/components/ValueProp";
 import Image from "next/image";
 import { Gem } from "lucide-react";
 import LatestGems from "@/components/LatestGems";
+import MapSection from "@/components/MapSection";
 import Link from "next/link";
 import Button from "@/components/Button";
 import BlogSection from "@/components/BlogSection";
@@ -19,6 +20,9 @@ export default function Home() {
       
       {/* Value Prop Section */}
       <ValueProp />
+
+      {/* Map Section */}
+      <MapSection />
 
       {/* Works / Latest Gems Section */}
       <div id="gems" className="w-full">

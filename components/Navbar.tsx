@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import ArrowLink from "./ArrowLink";
 import GemCard from "./GemCard";
@@ -18,6 +18,7 @@ const ALWAYS_SOLID_PATHS = ["/map"];
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
@@ -193,7 +194,7 @@ export default function Navbar() {
                 <div className="w-full max-w-[1440px] mx-auto px-6 md:px-[90px] py-12 flex flex-col gap-8">
                     <div className="flex items-center justify-between border-b border-black/10 pb-4">
                         <span className="font-serif font-medium text-2xl text-black">Latest Additions</span>
-                        <ArrowLink text="View Full Collection" href="/work" />
+                        <ArrowLink text="View Full Collection" href="/map" />
                     </div>
                     
                     <div className="grid grid-cols-3 gap-8">
@@ -201,10 +202,13 @@ export default function Navbar() {
                             <div key={gem.id} className="w-full">
                                 <GemCard 
                                     gem={gem} 
-                                    onClick={(src, bookingUrl) => {
-                                        if (src) {
-                                            setCurrentVideoSrc(src);
-                                            setCurrentBookingUrl(bookingUrl || "");
+                                    onClick={() => {
+                                        if (gem.href && gem.href !== "#") {
+                                            router.push(gem.href);
+                                            setIsMapOpen(false); // Close mega menu
+                                        } else if (gem.src) {
+                                            setCurrentVideoSrc(gem.src);
+                                            setCurrentBookingUrl(gem.bookingUrl || "");
                                             setIsModalOpen(true);
                                         }
                                     }} 
@@ -333,14 +337,14 @@ export default function Navbar() {
                <GemCard 
                   gem={GEMS[0]} 
                   variant="dark"
-                  onClick={(src, bookingUrl) => {
+                  onClick={() => {
                       setIsMenuOpen(false);
-                      if (src) {
-                          setCurrentVideoSrc(src);
-                          setCurrentBookingUrl(bookingUrl || "");
+                      if (GEMS[0].href && GEMS[0].href !== "#") {
+                          router.push(GEMS[0].href);
+                      } else if (GEMS[0].src) {
+                          setCurrentVideoSrc(GEMS[0].src);
+                          setCurrentBookingUrl(GEMS[0].bookingUrl || "");
                           setIsModalOpen(true);
-                      } else if (bookingUrl) {
-                          window.open(bookingUrl, "_blank");
                       }
                   }} 
                />

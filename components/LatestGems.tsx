@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import TabFilter from "./TabFilter";
 import ArrowLink from "./ArrowLink";
+import { useRouter } from "next/navigation";
 import { GEMS } from "../lib/data";
 import { VideoModal } from "./VideoModal";
 import GemCard from "./GemCard";
@@ -11,6 +12,7 @@ import GemCard from "./GemCard";
 const imgCard = "/images/card_img.png";
 
 export default function LatestGems() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentVideoSrc, setCurrentVideoSrc] = useState("");
@@ -18,11 +20,13 @@ export default function LatestGems() {
   
   const categories = ["All", "Cottage", "Villa", "Cabin"];
 
-  const handleGemClick = (src?: string, bookingUrl?: string) => {
-    if (src) {
-        setCurrentVideoSrc(src);
-        setCurrentBookingUrl(bookingUrl || "");
-        setIsModalOpen(true);
+  const handleGemClick = (gem: any) => {
+    if (gem.href && gem.href !== "#") {
+      router.push(gem.href);
+    } else if (gem.src) {
+      setCurrentVideoSrc(gem.src);
+      setCurrentBookingUrl(gem.bookingUrl || "");
+      setIsModalOpen(true);
     }
   };
 
@@ -57,7 +61,7 @@ export default function LatestGems() {
               onTabChange={setActiveTab} 
             />
 
-            <ArrowLink text="View All Gems" href="/work" />
+            <ArrowLink text="View Full Collection" href="/map" />
           </div>
 
           {/* Cards Grid */}
@@ -66,7 +70,7 @@ export default function LatestGems() {
               <GemCard 
                 key={gem.id} 
                 gem={gem} 
-                onClick={(src, bookingUrl) => handleGemClick(src, bookingUrl)} 
+                onClick={() => handleGemClick(gem)} 
               />
             ))}
           </div>

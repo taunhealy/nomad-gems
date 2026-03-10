@@ -10,9 +10,10 @@ interface GemCardProps {
   gem: Gem;
   onClick: (src?: string, bookingUrl?: string) => void;
   variant?: "default" | "dark";
+  className?: string;
 }
 
-export default function GemCard({ gem, onClick, variant = "default" }: GemCardProps) {
+export default function GemCard({ gem, onClick, variant = "default", className = "" }: GemCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -67,7 +68,7 @@ export default function GemCard({ gem, onClick, variant = "default" }: GemCardPr
 
   return (
     <div
-      className={`flex flex-col gap-4 w-full group ${gem.locked || gem.comingSoon ? "cursor-not-allowed" : "cursor-pointer"}`}
+      className={`flex flex-col gap-4 w-full group ${gem.locked || gem.comingSoon ? "cursor-not-allowed" : "cursor-pointer"} ${className}`}
       onClick={() => !(gem.locked || gem.comingSoon) && onClick(gem.src, gem.bookingUrl)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

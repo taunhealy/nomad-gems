@@ -6,12 +6,11 @@ import TabFilter from "@/components/TabFilter";
 import GemCard from "@/components/GemCard";
 import { VideoModal } from "@/components/VideoModal";
 import { GEMS } from "@/lib/data";
-import { Gem } from "lucide-react";
 import Footer from "@/components/Footer";
 
 const categories = ["All", "Cottage", "Villa", "Cabin"];
 
-export default function WorkPage() {
+export default function StayListingPage() {
   const [activeTab, setActiveTab] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentVideoSrc, setCurrentVideoSrc] = useState("");
@@ -47,13 +46,13 @@ export default function WorkPage() {
       <div className="w-full bg-[#3f1d14] pt-[80px]">
         <div className="w-full max-w-[1440px] mx-auto px-6 md:px-[100px] py-16 md:py-[80px] flex flex-col gap-4">
           <span className="font-sans text-sm uppercase tracking-[0.3em] text-[#f46b6b]">
-            Our Collection
+            Direct Booking
           </span>
           <h1 className="font-serif font-extrabold text-[48px] md:text-[80px] text-white leading-none">
-            All Gems
+            All Stays
           </h1>
-          <p className="font-sans text-lg text-white/50 max-w-[520px] leading-relaxed mt-2">
-            Work-ready sanctuaries verified for connectivity, comfort, and natural beauty. Browse, filter, and find your next retreat.
+          <p className="font-sans text-lg text-white/50 max-w-[520px] leading-relaxed mt-2 text-balance">
+            Honest reviews of remote-work retreats. We highlight both the strengths and weaknesses of every location to help you find the right fit.
           </p>
         </div>
       </div>
@@ -69,7 +68,7 @@ export default function WorkPage() {
               onTabChange={setActiveTab}
             />
             <span className="font-sans text-sm text-black/40 tracking-widest uppercase">
-              {filteredGems.length} {filteredGems.length === 1 ? "gem" : "gems"}
+              {filteredGems.length} {filteredGems.length === 1 ? "stay" : "stays"}
             </span>
           </div>
 

@@ -13,6 +13,30 @@ export type Gem = {
   coordinates?: [number, number];
   /** Time in seconds to seek to for thumbnail previews and embed start */
   thumbnailTime?: number;
+  description?: string;
+  // Remote Work Analysis
+  workAreas?: number;
+  ergonomicComfort?: number; // 1-5
+  wifiQuality?: number; // 1-5
+  extensionLead?: boolean;
+  cellularStrength?: number; // 1-5
+  tours?: string[]; // IDs of tours
+  // At a Glance info
+  website?: string;
+  address?: string;
+  whatsapp?: string;
+  googleMapsUrl?: string;
+};
+
+export type Tour = {
+  id: string;
+  title: string;
+  location: string;
+  src: string;
+  href?: string;
+  bookingUrl?: string;
+  image?: string;
+  category?: string;
 };
 
 /** Extract a YouTube video ID from various YouTube URL formats */
@@ -36,10 +60,15 @@ export const GEMS: Gem[] = [
     location: "Cape Town, South Africa",
     category: "Villa",
     coordinates: [-33.9249, 18.4241],
-    href: "/gems/francolin-house",
+    href: "/stay/francolin-house",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Tour_Healy-House-creator.mp4",
     locked: false,
     bookingUrl: "https://www.blueowlmedia.nz",
+    workAreas: 2,
+    ergonomicComfort: 5,
+    wifiQuality: 5,
+    extensionLead: true,
+    cellularStrength: 4,
   },
 
   {
@@ -61,8 +90,20 @@ export const GEMS: Gem[] = [
     category: "Cottage",
     coordinates: [-33.284, 19.136],
     image: "https://i0.wp.com/bigskycottages.co.za/wp-content/uploads/2020/10/LIGHT-LOUNGE-STUDIO-304-scaled.jpg?resize=1920%2C1080&ssl=1",
-    href: "https://bigskycottages.co.za/",
-    src: "",
+    href: "/stay/big-sky-cottages",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Big-Sky_Environment-Reel-Sunset-A-2.mp4",
+    bookingUrl: "https://book.nightsbridge.com/15291",
+    description: "High-altitude serenity in the Tulbagh valley. Modern self-catering cottages designed for deep focus and mountain-side peace.",
+    workAreas: 1,
+    ergonomicComfort: 2,
+    wifiQuality: 2,
+    extensionLead: true,
+    cellularStrength: 5,
+    tours: ["t1"],
+    website: "https://bigskycottages.co.za/",
+    address: "R44, Tulbagh, 6820, South Africa",
+    whatsapp: "+27713549209",
+    googleMapsUrl: "https://maps.app.goo.gl/uXyY9Z6x4r4yP3zW6",
   }
 ];
 
@@ -127,5 +168,27 @@ export const ENVIRONMENTS: Gem[] = [
     thumbnailTime: 10,
     locked: false,
     bookingUrl: ""
+  },
+  {
+    id: "e6",
+    title: "Sunset Over Tulbagh Valley",
+    location: "Tulbagh, South Africa",
+    category: "All",
+    coordinates: [-33.284, 19.136],
+    region: "Western Cape",
+    href: "#",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Big-Sky_Environment-Reel-Sunset-A-2.mp4",
+    locked: false,
+    bookingUrl: ""
+  }
+];
+
+export const TOURS: Tour[] = [
+  {
+    id: "t1",
+    title: "Cottage Tour: Exterior & Interior",
+    location: "Tulbagh, South Africa",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Drone-Tour_Cottage-Exterior-Interior-A.mp4",
+    category: "Drone Tour"
   }
 ];

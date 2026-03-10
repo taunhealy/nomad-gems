@@ -50,7 +50,7 @@ export default function Hero() {
               Explore Stays
             </Button>
             <span className="font-serif text-sm md:text-base italic text-[#f46b6b] mt-2 opacity-0 translate-y-1 group-hover/explore:opacity-100 group-hover/explore:translate-y-0 transition-all duration-300 ease-out pointer-events-none whitespace-nowrap">
-              Find your next deep-work sanctuary
+              Plan your next nature workation
             </span>
           </div>
           <div className="w-full md:w-auto flex flex-col items-center group/feature">

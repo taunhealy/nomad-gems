@@ -6,7 +6,12 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { Gem as GemData, getYoutubeThumbnail, getYoutubeId } from "../lib/data";
 import { renderToStaticMarkup } from "react-dom/server";
-import { Gem as GemIcon } from "lucide-react";
+import { Gem as GemIcon, Layers } from "lucide-react";
+import MarkerClusterGroup from 'react-leaflet-cluster';
+
+// Leaflet MarkerCluster CSS
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
 if (typeof window !== 'undefined') {
   delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -41,6 +46,35 @@ const createCustomIcon = (color: string) => {
     iconSize: [36, 36],
     iconAnchor: [18, 18],
     popupAnchor: [0, -24],
+  });
+};
+
+const createClusterCustomIcon = (cluster: any) => {
+  const count = cluster.getChildCount();
+  const iconMarkup = renderToStaticMarkup(
+    <div style={{
+      backgroundColor: '#3f1d14',
+      color: 'white',
+      borderRadius: '50%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      boxShadow: '0 4px 16px rgba(63,29,20,0.4)',
+      width: '44px',
+      height: '44px',
+      border: '2px solid #f46b6b',
+      position: 'relative'
+    }}>
+      <Layers size={18} className="absolute -top-1 -right-1 bg-[#f46b6b] rounded-full p-1 border border-[#3f1d14]" />
+      <span style={{ fontFamily: 'var(--font-serif)', fontWeight: 700, fontSize: '14px' }}>{count}</span>
+    </div>
+  );
+
+  return L.divIcon({
+    html: iconMarkup,
+    className: 'custom-cluster-icon bg-transparent border-none',
+    iconSize: [44, 44],
+    iconAnchor: [22, 22],
   });
 };
 
@@ -84,10 +118,11 @@ const POPUP_STYLES = `
   .nomad-popup .leaflet-popup-close-button:hover {
     background: rgba(244,107,107,0.12) !important;
     color: #f46b6b !important;
+    opacity: 1 !important;
   }
 `;
 
-function MapUpdater({ selectedGemId, gems, mapCenter }: { selectedGemId: string | null, gems: GemData[], mapCenter: [number, number] }) {
+function MapUpdater({ selectedGemId, gems }: { selectedGemId: string | null, gems: GemData[] }) {
   const map = useMap();
 
   useEffect(() => {
@@ -105,13 +140,41 @@ function MapUpdater({ selectedGemId, gems, mapCenter }: { selectedGemId: string 
           }
         });
       }
-    } else if (mapCenter.every(n => !isNaN(n))) {
-      map.flyTo(mapCenter, 6, {
-        duration: 1.5
-      });
-      map.closePopup();
     }
-  }, [selectedGemId, gems, map, mapCenter]);
+  }, [selectedGemId, gems, map]);
+
+  return null;
+}
+
+function PopupClickHandler({ onThumbnailClick, gems }: { onThumbnailClick: (gem: GemData) => void, gems: GemData[] }) {
+  const map = useMap();
+
+  useEffect(() => {
+    const handlePopupClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const thumbnailContainer = target.closest('[data-gem-id]');
+      if (thumbnailContainer) {
+        const gemId = thumbnailContainer.getAttribute('data-gem-id');
+        const gem = gems.find(g => g.id === gemId);
+        if (gem) {
+          onThumbnailClick(gem);
+        }
+      }
+    };
+
+    const onPopupOpen = (e: L.PopupEvent) => {
+      const container = e.popup.getElement();
+      if (container) {
+        container.addEventListener('click', handlePopupClick);
+      }
+    };
+
+    map.on('popupopen', onPopupOpen);
+
+    return () => {
+      map.off('popupopen', onPopupOpen);
+    };
+  }, [map, onThumbnailClick, gems]);
 
   return null;
 }
@@ -120,9 +183,10 @@ interface MapProps {
   gems: GemData[];
   selectedGemId: string | null;
   onMarkerClick: (id: string) => void;
+  onThumbnailClick: (gem: GemData) => void;
 }
 
-export default function Map({ gems, selectedGemId, onMarkerClick }: MapProps) {
+export default function Map({ gems, selectedGemId, onMarkerClick, onThumbnailClick }: MapProps) {
   const [stayIcon, setStayIcon]  = useState<L.DivIcon | null>(null);
   const [envIcon,  setEnvIcon]   = useState<L.DivIcon | null>(null);
 
@@ -150,105 +214,117 @@ export default function Map({ gems, selectedGemId, onMarkerClick }: MapProps) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
-        <MapUpdater selectedGemId={selectedGemId} gems={gems} mapCenter={defaultCenter} />
+        <MapUpdater selectedGemId={selectedGemId} gems={gems} />
+        <PopupClickHandler onThumbnailClick={onThumbnailClick} gems={gems} />
 
-        {gems.map((gem) => {
-          if (!gem.coordinates) return null;
-          return (
-            <Marker
-              key={gem.id}
-              position={gem.coordinates}
-              icon={gem.id.startsWith('e') ? envIcon : stayIcon}
-              alt={gem.id}
-              eventHandlers={{
-                click: () => onMarkerClick(gem.id),
-                mouseover: (e) => {
-                  e.target.openPopup();
-                }
-              }}
-            >
-              <Popup className="nomad-popup" minWidth={220}>
-                {/* Thumbnail */}
-                <div style={{ width: 220, height: 130, position: 'relative', overflow: 'hidden', flexShrink: 0, backgroundColor: '#e5e7eb' }}>
-                  {gem.src && !getYoutubeId(gem.src) ? (
-                    <video
-                      src={gem.src}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        display: 'block',
-                      }}
-                      muted
-                      playsInline
-                      onLoadedMetadata={(e) => {
-                        (e.target as HTMLVideoElement).currentTime = gem.thumbnailTime ?? 0.01;
-                      }}
-                    />
-                  ) : (
-                    <img
-                      src={getYoutubeId(gem.src || "") ? getYoutubeThumbnail(gem.src!) : (gem.image || "")}
-                      alt={gem.title}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        display: 'block',
-                      }}
-                      loading="lazy"
-                    />
-                  )}
-                  {/* Region / category badge */}
-                  <div style={{
-                    position: 'absolute',
-                    top: 10,
-                    left: 10,
-                    background: 'rgba(250,249,246,0.92)',
-                    backdropFilter: 'blur(6px)',
-                    borderRadius: 999,
-                    padding: '3px 10px',
-                    border: '1px solid rgba(244,107,107,0.2)',
-                  }}>
+        <MarkerClusterGroup
+          chunkedLoading
+          iconCreateFunction={createClusterCustomIcon}
+          maxClusterRadius={50}
+          spiderfyOnMaxZoom={true}
+          showCoverageOnHover={false}
+        >
+          {gems.map((gem) => {
+            if (!gem.coordinates) return null;
+            return (
+              <Marker
+                key={gem.id}
+                position={gem.coordinates}
+                icon={gem.id.startsWith('e') ? envIcon : stayIcon}
+                alt={gem.id}
+                eventHandlers={{
+                  click: () => onMarkerClick(gem.id),
+                  mouseover: (e) => {
+                    e.target.openPopup();
+                  }
+                }}
+              >
+                <Popup className="nomad-popup" minWidth={220}>
+                  {/* Thumbnail */}
+                  <div 
+                    data-gem-id={gem.id}
+                    style={{ width: 220, height: 130, position: 'relative', overflow: 'hidden', flexShrink: 0, backgroundColor: '#e5e7eb', cursor: 'pointer' }}
+                  >
+                    {gem.src && !getYoutubeId(gem.src) ? (
+                      <video
+                        src={gem.src}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block',
+                        }}
+                        muted
+                        playsInline
+                        onLoadedMetadata={(e) => {
+                          (e.target as HTMLVideoElement).currentTime = gem.thumbnailTime ?? 0.01;
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={getYoutubeId(gem.src || "") ? getYoutubeThumbnail(gem.src!) : (gem.image || "")}
+                        alt={gem.title}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block',
+                        }}
+                        loading="lazy"
+                      />
+                    )}
+                    {/* Region / category badge */}
+                    <div style={{
+                      position: 'absolute',
+                      top: 10,
+                      left: 10,
+                      background: 'rgba(250,249,246,0.92)',
+                      backdropFilter: 'blur(6px)',
+                      borderRadius: 999,
+                      padding: '3px 10px',
+                      border: '1px solid rgba(244,107,107,0.2)',
+                    }}>
+                      <span style={{
+                        fontFamily: 'sans-serif',
+                        fontSize: 9,
+                        fontWeight: 700,
+                        letterSpacing: '0.12em',
+                        textTransform: 'uppercase',
+                        color: '#f46b6b',
+                      }}>
+                        {gem.region ?? (gem.id.startsWith('e') ? 'Environment' : gem.category)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Info */}
+                  <div style={{ padding: '12px 14px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <span style={{
+                      fontFamily: 'Georgia, serif',
+                      fontSize: 17,
+                      fontWeight: 500,
+                      lineHeight: 1.2,
+                      color: '#3f1d14',
+                      letterSpacing: '-0.02em',
+                    }}>
+                      {gem.title}
+                    </span>
                     <span style={{
                       fontFamily: 'sans-serif',
-                      fontSize: 9,
-                      fontWeight: 700,
+                      fontSize: 10,
+                      fontWeight: 600,
                       letterSpacing: '0.12em',
                       textTransform: 'uppercase',
-                      color: '#f46b6b',
+                      color: 'rgba(63,29,20,0.5)',
                     }}>
-                      {gem.region ?? (gem.id.startsWith('e') ? 'Environment' : gem.category)}
+                      {gem.location}
                     </span>
                   </div>
-                </div>
-
-                {/* Info */}
-                <div style={{ padding: '12px 14px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <span style={{
-                    fontFamily: 'Georgia, serif',
-                    fontSize: 17,
-                    fontWeight: 500,
-                    lineHeight: 1.2,
-                    color: '#3f1d14',
-                    letterSpacing: '-0.02em',
-                  }}>
-                    {gem.title}
-                  </span>
-                  <span style={{
-                    fontFamily: 'sans-serif',
-                    fontSize: 10,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(63,29,20,0.5)',
-                  }}>
-                    {gem.location}
-                  </span>
-                </div>
-              </Popup>
-            </Marker>
-          );
-        })}
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MarkerClusterGroup>
       </MapContainer>
     </div>
   );

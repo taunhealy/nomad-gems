@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { GEMS, ENVIRONMENTS } from "@/lib/data";
 import GemCard from "@/components/GemCard";
 import DynamicMap from "@/components/DynamicMap";
@@ -30,18 +30,21 @@ export default function GemsPage() {
   const [activeVideo,     setActiveVideo]     = useState("");
   const [activeBookingUrl, setActiveBookingUrl] = useState("");
 
-  const filteredListings =
-    filter === "stays"        ? staysWithCoords :
-    filter === "environments" ? envsWithCoords  :
-    allWithCoords;
+  const listings = useMemo(() => {
+    return filter === "stays" ? staysWithCoords :
+           filter === "environments" ? envsWithCoords :
+           allWithCoords;
+  }, [filter, staysWithCoords, envsWithCoords, allWithCoords]);
 
-  const handleGemClick = (src?: string, bookingUrl?: string) => {
-    if (src) {
-      setActiveVideo(src);
-      setActiveBookingUrl(bookingUrl || "");
+  const handleGemClick = (gem: any) => {
+    if (gem.href && gem.href !== "#") {
+      window.location.href = gem.href;
+    } else if (gem.src) {
+      setActiveVideo(gem.src);
+      setActiveBookingUrl(gem.bookingUrl || "");
       setIsModalOpen(true);
-    } else if (bookingUrl) {
-      window.open(bookingUrl, "_blank");
+    } else if (gem.bookingUrl) {
+      window.open(gem.bookingUrl, "_blank");
     }
   };
 
@@ -81,16 +84,15 @@ export default function GemsPage() {
 
       {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2 gap-x-6 gap-y-10 pb-8">
-        {filteredListings.map((gem) => (
+        {listings.map((gem) => (
           <div
             key={gem.id}
             onMouseEnter={() => setSelectedGemId(gem.id)}
-            onMouseLeave={() => setSelectedGemId(null)}
           >
-            <GemCard gem={gem} onClick={handleGemClick} />
+            <GemCard gem={gem} onClick={() => handleGemClick(gem)} />
           </div>
         ))}
-        {filteredListings.length === 0 && (
+        {listings.length === 0 && (
           <p className="font-sans text-sm text-black/40 col-span-2">
             No listings found.
           </p>
@@ -114,9 +116,10 @@ export default function GemsPage() {
         {/* ── Single DynamicMap — always mounted ── */}
         <div className="flex-1 h-full min-w-0">
           <DynamicMap
-            gems={filteredListings}
+            gems={listings}
             selectedGemId={selectedGemId}
             onMarkerClick={(id) => setSelectedGemId(id)}
+            onThumbnailClick={handleGemClick}
           />
         </div>
 
