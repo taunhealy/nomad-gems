@@ -20,12 +20,16 @@ export type Gem = {
   wifiQuality?: number; // 1-5
   extensionLead?: boolean;
   cellularStrength?: number; // 1-5
+  backupPowerReady?: boolean;
   tours?: string[]; // IDs of tours
   // At a Glance info
   website?: string;
   address?: string;
   whatsapp?: string;
   googleMapsUrl?: string;
+  lastAuditDate?: string;
+  improvements?: string[];
+  recommendedImprovements?: { label: string; href?: string }[];
 };
 
 export type Tour = {
@@ -69,6 +73,8 @@ export const GEMS: Gem[] = [
     wifiQuality: 5,
     extensionLead: true,
     cellularStrength: 4,
+    backupPowerReady: true,
+    lastAuditDate: "October 2023",
   },
 
   {
@@ -91,19 +97,26 @@ export const GEMS: Gem[] = [
     coordinates: [-33.284, 19.136],
     image: "https://i0.wp.com/bigskycottages.co.za/wp-content/uploads/2020/10/LIGHT-LOUNGE-STUDIO-304-scaled.jpg?resize=1920%2C1080&ssl=1",
     href: "/stay/big-sky-cottages",
-    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Big-Sky_Environment-Reel-Sunset-A-2.mp4",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Drone-Tour_Cottage-Exterior-Interior-A.mp4",
     bookingUrl: "https://book.nightsbridge.com/15291",
     description: "High-altitude serenity in the Tulbagh valley. Modern self-catering cottages designed for deep focus and mountain-side peace.",
-    workAreas: 1,
+    workAreas: 3,
     ergonomicComfort: 2,
     wifiQuality: 2,
-    extensionLead: true,
+    extensionLead: false,
     cellularStrength: 5,
+    backupPowerReady: false,
     tours: ["t1"],
     website: "https://bigskycottages.co.za/",
-    address: "R44, Tulbagh, 6820, South Africa",
+    address: "R43, Wolseley, 6830, South Africa",
     whatsapp: "+27713549209",
-    googleMapsUrl: "https://maps.app.goo.gl/uXyY9Z6x4r4yP3zW6",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Big+Sky+Cottages+Wolseley",
+    lastAuditDate: "March 2026",
+    improvements: [],
+    recommendedImprovements: [
+      { label: "Plants" },
+      { label: "Desk stand", href: "https://www.deskstand.com/products/jumbo-deskstand-standing-desk" }
+    ]
   }
 ];
 

@@ -55,10 +55,10 @@ export default function GemsPage() {
         <button
           key={value}
           onClick={() => { setFilter(value); setSelectedGemId(null); }}
-          className={`px-4 py-1.5 rounded-full font-sans text-xs tracking-widest uppercase transition-all duration-200 border ${
+          className={`px-4 py-1.5 rounded-full font-sans text-xs tracking-widest uppercase transition-all duration-200 border cursor-pointer ${
             filter === value
-              ? "bg-[#f46b6b] text-white border-[#f46b6b] shadow-sm"
-              : "bg-transparent text-black/50 border-black/15 hover:border-[#f46b6b]/50 hover:text-black"
+              ? "bg-nomad-red text-white border-nomad-red shadow-sm"
+              : "bg-transparent text-black/50 border-black/15 hover:border-nomad-red/50 hover:text-black"
           }`}
         >
           {label}
@@ -138,7 +138,7 @@ export default function GemsPage() {
             id="mobile-tab-map"
             onClick={() => setMobileTab("map")}
             className={`flex-1 flex flex-col items-center justify-center gap-1 transition-colors duration-200 ${
-              mobileTab === "map" ? "text-[#f46b6b]" : "text-black/40"
+              mobileTab === "map" ? "text-nomad-red" : "text-black/40"
             }`}
           >
             <Map size={20} strokeWidth={1.5} />
@@ -148,7 +148,7 @@ export default function GemsPage() {
             id="mobile-tab-listings"
             onClick={() => setMobileTab("listings")}
             className={`flex-1 flex flex-col items-center justify-center gap-1 transition-colors duration-200 ${
-              mobileTab === "listings" ? "text-[#f46b6b]" : "text-black/40"
+              mobileTab === "listings" ? "text-nomad-red" : "text-black/40"
             }`}
           >
             <LayoutGrid size={20} strokeWidth={1.5} />

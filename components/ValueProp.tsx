@@ -15,11 +15,11 @@ const content: Record<Audience, {
 }> = {
   nomads: {
     heading: "Work in nature.",
-    tagline: "(for digital nomads seeking deep work)",
+    tagline: "(for those seeking a workation in nature)",
     description:
       "Nomad Gems discovers nature retreats that are 'good enough' to get work done. We focus on the workation essentials—reliable connectivity and a quiet spot to focus—ensuring you have the bare minimum to stay productive while you truly rejuvenate in nature.",
     amenities: [
-      { icon: Wifi, label: "Fast Wifi" },
+      { icon: Wifi, label: "Internet Access" },
       { icon: Monitor, label: "Workspace" },
       { icon: Coffee, label: "Coffee" },
       { icon: TreePine, label: "Nature" },
