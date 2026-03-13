@@ -30,6 +30,7 @@ export type Gem = {
   lastAuditDate?: string;
   improvements?: string[];
   recommendedImprovements?: { label: string; href?: string }[];
+  verified?: boolean;
 };
 
 export type Tour = {
@@ -75,6 +76,10 @@ export const GEMS: Gem[] = [
     cellularStrength: 4,
     backupPowerReady: true,
     lastAuditDate: "October 2023",
+    address: "6 Shirvan Close, Constantia",
+    verified: true,
+    region: "Western Cape",
+    tours: ["t3"],
   },
 
   {
@@ -117,6 +122,28 @@ export const GEMS: Gem[] = [
       { label: "Plants" },
       { label: "Desk stand", href: "https://www.deskstand.com/products/jumbo-deskstand-standing-desk" }
     ]
+  },
+  {
+    id: "g7",
+    title: "6OnKloof",
+    location: "Bredasdorp, South Africa",
+    category: "Villa",
+    coordinates: [-34.5325, 20.0406],
+    image: "https://assets.blueowlmedia.nz/Blue-Owl-Media_6OnKloof_Tour-Sunny-A2.mp4_snapshot_00.24.911.webp",
+    href: "/stay/6onkloof",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_6OnKloof_Tour-Sunny-A2.mp4",
+    bookingUrl: "https://book.nightsbridge.com/18581",
+    workAreas: 2,
+    ergonomicComfort: 4,
+    wifiQuality: 4,
+    extensionLead: true,
+    cellularStrength: 5,
+    backupPowerReady: true,
+    lastAuditDate: "February 2026",
+    address: "6 Kloof St, Bredasdorp, 7280",
+    verified: true,
+    description: "A beautifully restored Dutch colonial guesthouse in the heart of Bredasdorp. 6OnKloof pairs historic charm with a professional remote-work infrastructure.",
+    tours: ["t2"]
   }
 ];
 
@@ -184,13 +211,61 @@ export const ENVIRONMENTS: Gem[] = [
   },
   {
     id: "e6",
-    title: "Sunset Over Tulbagh Valley",
+    title: "Sunset At Big Sky Cottages",
     location: "Tulbagh, South Africa",
     category: "All",
     coordinates: [-33.284, 19.136],
     region: "Western Cape",
     href: "#",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Big-Sky_Environment-Reel-Sunset-A-2.mp4",
+    locked: false,
+    bookingUrl: ""
+  },
+  {
+    id: "e7",
+    title: "Poolside Serenity at Big Sky",
+    location: "Tulbagh, South Africa",
+    category: "All",
+    coordinates: [-33.284, 19.136],
+    region: "Western Cape",
+    href: "#",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Big-Sky-Cottages_Environment-Tour-with-pool-1080p.mp4",
+    locked: false,
+    bookingUrl: ""
+  },
+  {
+    id: "e8",
+    title: "Big Sky Environment Tour",
+    location: "Tulbagh, South Africa",
+    category: "All",
+    coordinates: [-33.284, 19.136],
+    region: "Western Cape",
+    href: "#",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Big-Sky-Cottages_Environment-Tour-with-pool-v2-1080p.mp4",
+    locked: false,
+    bookingUrl: ""
+  },
+  {
+    id: "e9",
+    title: "6OnKloof Exterior Tour",
+    location: "Bredasdorp, South Africa",
+    category: "All",
+    coordinates: [-34.5325, 20.0406],
+    region: "Western Cape",
+    href: "#",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_6OnKloof_Exterior-C1.mp4",
+    locked: false,
+    bookingUrl: ""
+  },
+  {
+    id: "e10",
+    title: "Afternoon Light at 6OnKloof",
+    location: "Bredasdorp, South Africa",
+    category: "All",
+    coordinates: [-34.5325, 20.0406],
+    region: "Western Cape",
+    href: "#",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_6OnKloof_Tour-Sunny-B1.mp4",
     locked: false,
     bookingUrl: ""
   }
@@ -203,5 +278,20 @@ export const TOURS: Tour[] = [
     location: "Tulbagh, South Africa",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Drone-Tour_Cottage-Exterior-Interior-A.mp4",
     category: "Drone Tour"
+  },
+  {
+    id: "t2",
+    title: "Manor House & Garden Tour",
+    location: "Bredasdorp, South Africa",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_6OnKloof_Exterior-1-take-day-3.mp4",
+    image: "https://assets.blueowlmedia.nz/Blue-Owl-Media_6OnKloof_Exterior-1-take-day-3.mp4_snapshot_00.06.001.jpg",
+    category: "Property Tour"
+  },
+  {
+    id: "t3",
+    title: "Francolin House: Complete Walkthrough",
+    location: "Constantia, Cape Town",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Tour_Healy-House-creator.mp4",
+    category: "Property Tour"
   }
 ];

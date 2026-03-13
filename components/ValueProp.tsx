@@ -14,7 +14,7 @@ const content: Record<Audience, {
   amenities: { icon: React.ElementType; label: string }[];
 }> = {
   nomads: {
-    heading: "Work in nature.",
+    heading: "Escape, Recharge & Stay Connected",
     tagline: "(for those seeking a workation in nature)",
     description:
       "Nomad Gems discovers nature retreats that are 'good enough' to get work done. We focus on the workation essentials—reliable connectivity and a quiet spot to focus—ensuring you have the bare minimum to stay productive while you truly rejuvenate in nature.",

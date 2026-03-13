@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { Play } from "lucide-react";
+import { Play, Gem as GemIcon } from "lucide-react";
 import { Gem, getYoutubeThumbnail, getYoutubeId } from "../lib/data";
 import Badge from "./Badge";
 
@@ -45,7 +45,7 @@ export default function GemCard({ gem, onClick, variant = "default", className =
     } else if (isYoutubeVideo) {
       // YouTube — build an autoplay embed URL and mount the iframe
       const videoId  = getYoutubeId(gem.src!);
-      const start    = gem.thumbnailTime ?? 0;
+      const start    = gem.thumbnailTime ?? 3;
       if (videoId) {
         setYoutubeIframeSrc(
           `https://www.youtube.com/embed/${videoId}` +
@@ -97,6 +97,27 @@ export default function GemCard({ gem, onClick, variant = "default", className =
             <Badge>{gem.region || gem.category}</Badge>
           </div>
 
+          {/* Verified Gem Badge */}
+          {gem.verified && (
+            <div className="absolute top-4 right-4 z-40 group/tooltip">
+              <div className="bg-white/90 backdrop-blur-md p-2 rounded-full shadow-lg border border-nomad-red/20 transition-all duration-500 hover:scale-110">
+                <GemIcon size={16} className="text-nomad-red fill-nomad-red/20" />
+              </div>
+              
+              {/* Tooltip */}
+              <div className="absolute top-full right-0 mt-3 w-56 p-4 bg-nomad-brown backdrop-blur-xl text-white rounded-2xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-500 transform translate-y-2 group-hover/tooltip:translate-y-0 shadow-[0_20px_50px_rgba(63,29,20,0.3)] z-50 pointer-events-none border border-white/10">
+                <div className="flex flex-col gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-nomad-red">Nomad Verified</span>
+                  <p className="font-serif italic text-sm text-white/90 leading-relaxed">
+                    "Verified for high-speed internet, ergonomic desk & nature surroundings"
+                  </p>
+                </div>
+                {/* Arrow */}
+                <div className="absolute -top-1 right-4 w-3 h-3 bg-nomad-brown rotate-45 border-l border-t border-white/10" />
+              </div>
+            </div>
+          )}
+
           {/* Video Layer — MP4 / R2 (Shows as thumbnail when not playing) */}
           {hasPlayableVideo && !(gem.locked || gem.comingSoon) && (
             <video
@@ -110,7 +131,7 @@ export default function GemCard({ gem, onClick, variant = "default", className =
               loop
               onLoadedMetadata={() => {
                 if (videoRef.current) {
-                  videoRef.current.currentTime = gem.thumbnailTime ?? 0.01;
+                  videoRef.current.currentTime = gem.thumbnailTime ?? 3;
                 }
               }}
             />
@@ -152,11 +173,17 @@ export default function GemCard({ gem, onClick, variant = "default", className =
              </div>
           )}
 
-          {/* Play Button Overlay */}
+          {/* Play Button Overlay - Nomad Gems Unique Pill */}
           {!(gem.locked || gem.comingSoon) && gem.src && (
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-30">
-              <div className="w-16 h-16 bg-[#f46b6b]/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform duration-500 ease-out">
-                <Play className="w-6 h-6 ml-1 text-white fill-white" />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none z-30">
+              <div className="px-6 py-3 bg-nomad-red/90 backdrop-blur-md rounded-full flex items-center gap-3 shadow-2xl transform scale-75 group-hover:scale-100 transition-transform duration-500 ease-out border border-white/20">
+                <div className="relative overflow-hidden group/gem">
+                    <GemIcon size={20} className="text-white fill-white/20 relative z-10" />
+                    {/* Shine effect */}
+                    <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-shine z-20" />
+                </div>
+                <div className="w-px h-4 bg-white/20" />
+                <Play className="w-5 h-5 text-white fill-white" />
               </div>
             </div>
           )}

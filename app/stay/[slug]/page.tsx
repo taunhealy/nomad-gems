@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useState, useRef, useEffect } from "react";
-import { GEMS, ENVIRONMENTS, TOURS, Gem } from "@/lib/data";
+import { GEMS, ENVIRONMENTS, TOURS, Gem, getYoutubeThumbnail } from "@/lib/data";
 import { VideoModal } from "@/components/VideoModal";
 import GemCard from "@/components/GemCard";
 import Navbar from "@/components/Navbar";
@@ -19,7 +19,9 @@ import {
   Calendar,
   Search,
   Info,
-  TrendingUp
+  TrendingUp,
+  ArrowLeft,
+  ArrowRight
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -41,6 +43,10 @@ export default function StayPage({ params }: PageProps) {
     g.title.toLowerCase().replace(/ /g, "-") === slug ||
     g.href.split("/").pop() === slug
   );
+
+  const currentIndex = gem ? GEMS.findIndex(g => g.id === gem.id) : -1;
+  const prevGem = currentIndex > -1 ? (GEMS[currentIndex - 1] || GEMS[GEMS.length - 1]) : null;
+  const nextGem = currentIndex > -1 ? (GEMS[currentIndex + 1] || GEMS[0]) : null;
 
   const handleEnvClick = (src?: string, bookingUrl?: string) => {
     if (src) {
@@ -95,13 +101,31 @@ export default function StayPage({ params }: PageProps) {
       
       {/* Hero Header Section */}
       <section className="relative w-full h-[70vh] md:h-[90vh] overflow-hidden bg-black text-left">
-        {gem.image && (
+        {gem.image ? (
           <img
             src={gem.image}
             alt={gem.title}
             className="absolute inset-0 w-full h-full object-cover opacity-80"
           />
-        )}
+        ) : gem.src ? (
+          gem.src.includes("youtube.com") || gem.src.includes("youtu.be") ? (
+            <img
+              src={getYoutubeThumbnail(gem.src)}
+              alt={gem.title}
+              className="absolute inset-0 w-full h-full object-cover opacity-80"
+            />
+          ) : (
+            <video
+              src={gem.src}
+              className="absolute inset-0 w-full h-full object-cover opacity-80"
+              muted
+              playsInline
+              onLoadedMetadata={(e) => {
+                e.currentTarget.currentTime = gem.thumbnailTime ?? 7;
+              }}
+            />
+          )
+        ) : null}
         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/20" />
         
         <div className="absolute bottom-0 left-0 w-full p-8 md:p-16 text-white max-w-[1440px] mx-auto right-0 flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -150,6 +174,42 @@ export default function StayPage({ params }: PageProps) {
             We provide an honest, boots-on-the-ground look at what it's really like to work from {gem.title}. Rather than just showing the highlights, we audit the strengths and weaknesses of the remote work setup, so you know exactly what to expect before you book.
           </div>
         </section>
+
+        {/* Tours Section */}
+        {displayTours.length > 0 && (
+          <section className="mb-32">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-black/10 pb-8 gap-8">
+              <div className="flex flex-col gap-3">
+                <h3 className="text-xs font-sans uppercase tracking-[0.3em] text-nomad-red font-bold">Property Tours</h3>
+                <h2 className="text-5xl md:text-7xl font-serif font-medium leading-none tracking-tight text-black">
+                  The Tour
+                </h2>
+              </div>
+              <div className="text-black/40 font-sans uppercase tracking-widest text-sm">
+                Explore {gem.title}
+              </div>
+            </div>
+
+            {displayTours.length === 1 ? (
+              <div className="max-w-[1000px] mx-auto w-full">
+                <GemCard 
+                  gem={displayTours[0] as any} 
+                  onClick={() => handleEnvClick(displayTours[0].src)} 
+                />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                {displayTours.map((tour) => (
+                  <GemCard 
+                    key={tour.id} 
+                    gem={tour as any} 
+                    onClick={() => handleEnvClick(tour.src)} 
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
         {/* Remote Work Analysis */}
         <section className="mb-32 bg-nomad-brown rounded-[60px] p-8 md:p-16 lg:p-24 text-white overflow-hidden relative border border-white/5 shadow-2xl">
@@ -351,8 +411,8 @@ export default function StayPage({ params }: PageProps) {
         </section>
 
         {/* At a Glance Section */}
-        <section className="mb-32">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-black/10 pb-8 gap-8">
+        <section className="mb-20 md:mb-24">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-12 border-b border-black/10 pb-8 gap-8">
             <div className="flex flex-col gap-3">
               <h3 className="text-xs font-sans uppercase tracking-[0.3em] text-nomad-red font-bold">Quick Details</h3>
               <h2 className="text-5xl md:text-7xl font-serif font-medium leading-none tracking-tight text-black">
@@ -364,7 +424,7 @@ export default function StayPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
             {/* Contact Info List */}
             <div className="flex flex-col gap-8">
               {gem.website && (
@@ -416,109 +476,157 @@ export default function StayPage({ params }: PageProps) {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col gap-6">
-               <div className="bg-[#FAF9F6] p-8 md:p-12 rounded-[40px] border border-black/5 flex flex-col gap-8 h-full">
-                  <h4 className="text-2xl font-serif italic text-black/80">Ready to book your stay or explore their Google listing?</h4>
-                  
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    {gem.bookingUrl && (
-                      <Button 
-                        href={gem.bookingUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1"
-                        size="lg"
-                      >
-                        <Calendar size={20} />
-                        Book Now
-                      </Button>
-                    )}
+            {(gem.bookingUrl || gem.googleMapsUrl) && (
+              <div className="flex flex-col gap-6">
+                 <div className="bg-[#FAF9F6] p-8 md:p-12 rounded-[40px] border border-black/5 flex flex-col gap-8 h-full">
+                    <h4 className="text-2xl font-serif italic text-black/80">
+                      {gem.bookingUrl && gem.googleMapsUrl 
+                        ? "Ready to book your stay or explore their Google listing?" 
+                        : gem.bookingUrl 
+                          ? "Ready to book your stay?" 
+                          : "Ready to explore their Google listing?"}
+                    </h4>
                     
-                    {gem.googleMapsUrl && (
-                      <Button 
-                        href={gem.googleMapsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        variant="outline"
-                        className="flex-1 bg-white border-black/10 text-black hover:border-black"
-                        size="lg"
-                      >
-                        <Search size={20} />
-                        View on Google
-                      </Button>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      {gem.bookingUrl && (
+                        <Button 
+                          href={gem.bookingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1"
+                          size="lg"
+                        >
+                          <Calendar size={20} />
+                          Book Now
+                        </Button>
+                      )}
+                      
+                      {gem.googleMapsUrl && (
+                        <Button 
+                          href={gem.googleMapsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          variant="outline"
+                          className="flex-1 bg-white border-black/10 text-black hover:border-black"
+                          size="lg"
+                        >
+                          <Search size={20} />
+                          View on Google
+                        </Button>
+                      )}
+                    </div>
+  
+                    {gem.bookingUrl && (
+                      <p className="text-black/40 text-sm font-sans italic">
+                        All bookings are handled directly by the property via their official booking engine.
+                      </p>
                     )}
-                  </div>
-
-                  <p className="text-black/40 text-sm font-sans italic">
-                    All bookings are handled directly by the property via their official booking engine.
-                  </p>
-               </div>
-            </div>
+                 </div>
+              </div>
+            )}
           </div>
         </section>
         
-        {/* Tours Section */}
-        {displayTours.length > 0 && (
+
+
+        {/* Environment Grid */}
+        {displayEnvironments.length > 0 && (
           <section className="mb-24">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-black/10 pb-8 gap-8">
               <div className="flex flex-col gap-3">
-                <h3 className="text-xs font-sans uppercase tracking-[0.3em] text-nomad-red font-bold">Property Tours</h3>
+                <h3 className="text-xs font-sans uppercase tracking-[0.3em] text-nomad-red font-bold">Surroundings</h3>
                 <h2 className="text-5xl md:text-7xl font-serif font-medium leading-none tracking-tight text-black">
-                  The Tour
+                  The Environment
                 </h2>
               </div>
               <div className="text-black/40 font-sans uppercase tracking-widest text-sm">
-                Explore {gem.title}
+                Discover {gem.location.split(',')[0]}
               </div>
             </div>
-
-            {displayTours.length === 1 ? (
-              <div className="max-w-[1000px] mx-auto w-full">
+  
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {displayEnvironments.map((env) => (
                 <GemCard 
-                  gem={displayTours[0] as any} 
-                  onClick={() => handleEnvClick(displayTours[0].src)} 
+                  key={env.id} 
+                  gem={env} 
+                  onClick={() => handleEnvClick(env.src, env.bookingUrl)} 
                 />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                {displayTours.map((tour) => (
-                  <GemCard 
-                    key={tour.id} 
-                    gem={tour as any} 
-                    onClick={() => handleEnvClick(tour.src)} 
-                  />
-                ))}
-              </div>
-            )}
+              ))}
+            </div>
           </section>
         )}
+      </main>
 
-        {/* Environment Grid */}
-        <section className="mb-24">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-black/10 pb-8 gap-8">
-            <div className="flex flex-col gap-3">
-              <h3 className="text-xs font-sans uppercase tracking-[0.3em] text-nomad-red font-bold">Surroundings</h3>
-              <h2 className="text-5xl md:text-7xl font-serif font-medium leading-none tracking-tight text-black">
-                The Environment
-              </h2>
+      {/* Navigation Footer - Redesigned Layout */}
+      {(prevGem || nextGem) && (
+        <section className="py-24 md:py-32 px-6 bg-[#FAF9F6] border-t border-black/5 overflow-hidden">
+          <div className="max-w-[1440px] mx-auto relative">
+            <div className="flex flex-col gap-4 mb-12">
+               <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-nomad-red">Continue Exploring</span>
+               <h2 className="text-5xl md:text-6xl font-serif tracking-tighter text-black">More Stays</h2>
             </div>
-            <div className="text-black/40 font-sans uppercase tracking-widest text-sm">
-              Discover {gem.location.split(',')[0]}
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {displayEnvironments.map((env) => (
-              <GemCard 
-                key={env.id} 
-                gem={env} 
-                onClick={() => handleEnvClick(env.src, env.bookingUrl)} 
-              />
-            ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+              {prevGem && (
+                <Link 
+                  href={prevGem.href}
+                  className="group relative h-[300px] md:h-[400px] rounded-[40px] overflow-hidden bg-black flex flex-col justify-end p-8 md:p-12"
+                >
+                  {/* Background handling - reusing the logic from hero */}
+                  {prevGem.image ? (
+                    <img src={prevGem.image} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-110" />
+                  ) : (
+                    <video 
+                      src={prevGem.src} 
+                      className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-110" 
+                      muted playsInline 
+                      onLoadedMetadata={(e) => e.currentTarget.currentTime = prevGem.thumbnailTime ?? 7}
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-2 text-white/60 mb-3 group-hover:text-nomad-red transition-colors">
+                      <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" />
+                      <span className="text-[10px] font-bold uppercase tracking-widest font-sans">Previous</span>
+                    </div>
+                    <h3 className="text-3xl md:text-5xl font-serif text-white tracking-tight mb-1">{prevGem.title}</h3>
+                    <p className="text-white/40 font-sans text-xs uppercase tracking-widest">{prevGem.location}</p>
+                  </div>
+                </Link>
+              )}
+
+              {nextGem && (
+                <Link 
+                  href={nextGem.href}
+                  className="group relative h-[300px] md:h-[400px] rounded-[40px] overflow-hidden bg-black flex flex-col justify-end p-8 md:p-12 md:mt-24"
+                >
+                   {nextGem.image ? (
+                    <img src={nextGem.image} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-110" />
+                  ) : (
+                    <video 
+                      src={nextGem.src} 
+                      className="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-110" 
+                      muted playsInline 
+                      onLoadedMetadata={(e) => e.currentTarget.currentTime = nextGem.thumbnailTime ?? 7}
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-2 text-white/60 mb-3 group-hover:text-nomad-red transition-colors">
+                      <span className="text-[10px] font-bold uppercase tracking-widest font-sans">Next Experience</span>
+                      <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                    </div>
+                    <h3 className="text-3xl md:text-5xl font-serif text-white tracking-tight mb-1">{nextGem.title}</h3>
+                    <p className="text-white/40 font-sans text-xs uppercase tracking-widest">{nextGem.location}</p>
+                  </div>
+                </Link>
+              )}
+            </div>
           </div>
         </section>
-
-      </main>
+      )}
 
       <Footer />
 

@@ -83,6 +83,7 @@ export default function MapSection() {
                 {FILTER_OPTIONS.map(({ label, value }) => (
                   <button
                     key={value}
+                    suppressHydrationWarning
                     onClick={() => { setFilter(value); setSelectedGemId(null); }}
                     className={`px-4 py-1.5 rounded-full font-sans text-[10px] tracking-widest uppercase cursor-pointer transition-all duration-200 border ${
                       filter === value

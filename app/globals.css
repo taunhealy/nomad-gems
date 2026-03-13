@@ -39,6 +39,16 @@
   .metric-label {
     @apply text-[10px] text-white/40 uppercase tracking-widest font-bold;
   }
+
+  .animate-shine {
+    animation: shine 1.2s infinite ease-in-out;
+  }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
 }
 
 @media (prefers-color-scheme: dark) {

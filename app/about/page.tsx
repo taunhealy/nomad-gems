@@ -14,7 +14,7 @@ const features = [
     icon: Wifi,
     title: "High-Speed Connectivity",
     description:
-      "Every gem is verified for 10 Mbps+ download speeds (25+ Mbps ideal). Video calls, cloud syncs, and deploys — without the anxiety.",
+      "We evaluate every gem for connectivity and reliability, ensuring you have the tools you need to stay productive while enjoying the natural surroundings.",
   },
   {
     icon: Monitor,
@@ -131,7 +131,7 @@ export default function WorkPage() {
               Built for Deep Work
             </h2>
             <p className="font-sans text-[18px] text-[#4a4a4a] max-w-[500px] leading-relaxed">
-              We check the workation essentials—reliable connectivity and a quiet spot to focus.
+              We evaluate stays for connectivity, reliability, comfort and a quiet spot to focus.
             </p>
           </div>
 

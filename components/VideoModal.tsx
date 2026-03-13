@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { X, Play, Pause, Volume2, VolumeX, Maximize2, Minimize2, ExternalLink, Lock } from "lucide-react";
+import { X, Play, Pause, Volume2, VolumeX, Maximize2, Minimize2, ExternalLink, Lock, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { GEMS, ENVIRONMENTS, Gem, getYoutubeThumbnail } from "../lib/data";
@@ -33,9 +33,12 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [showControls, setShowControls] = React.useState(true);
 
+  // Derived logic for categorization and state
+  const isYoutube = currentSrc?.includes("youtube.com") || currentSrc?.includes("youtu.be");
+  const activeGem = [...GEMS, ...ENVIRONMENTS].find(g => g.src === currentSrc);
   const isEnvironment = ENVIRONMENTS.some(e => e.src === currentSrc);
   const relatedVideos = isEnvironment ? ENVIRONMENTS : GEMS;
-  const sidebarTitle = isEnvironment ? "More Environments" : "More Gems";
+  const sidebarTitle = isEnvironment ? "Regional Context" : "The Gems";
 
   // Helper to handle auto-hide
   const resetControlsTimeout = React.useCallback(() => {
@@ -65,25 +68,37 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
       };
   }, [isPlaying, resetControlsTimeout]);
 
-  // Sync prop changes
+  // Sync prop changes immediately when modal opens or props change
   React.useEffect(() => {
-    setCurrentSrc(videoSrc);
-    setCurrentBookingUrl(bookingUrl);
-  }, [videoSrc, bookingUrl]);
+    if (isOpen) {
+      setCurrentSrc(videoSrc);
+      setCurrentBookingUrl(bookingUrl);
+      setIsPlaying(true);
+      setProgress(0);
+      
+      // Force video reload if it's a direct file
+      if (videoRef.current && !videoSrc.includes("youtube") && !videoSrc.includes("youtu.be")) {
+        videoRef.current.load();
+      }
+    }
+  }, [isOpen, videoSrc, bookingUrl]);
 
-  // Handle Video Source Change (Reset state)
-  const handleVideoChange = (newSrc: string, slug?: string) => {
+  // Handle Video Source Change (Reset state for sidebar clicks)
+  const handleVideoChange = (newSrc: string) => {
     setCurrentSrc(newSrc);
     setIsPlaying(true);
     setProgress(0);
 
-    // Look up the booking URL for the new video
     const matchedGem = [...GEMS, ...ENVIRONMENTS].find((g) => g.src === newSrc);
     setCurrentBookingUrl(matchedGem?.bookingUrl || "");
 
-    // Update URL to make it shareable
-    if (matchedGem && matchedGem.href) {
+    if (matchedGem && matchedGem.href && matchedGem.href !== "#") {
         window.history.replaceState(null, '', matchedGem.href);
+    }
+    
+    // Force reload
+    if (videoRef.current && !newSrc.includes("youtube") && !newSrc.includes("youtu.be")) {
+        videoRef.current.load();
     }
   };
 
@@ -91,7 +106,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
   React.useEffect(() => {
     if (isOpen && currentSrc) {
       const matchedGem = [...GEMS, ...ENVIRONMENTS].find((g) => g.src === currentSrc);
-      if (matchedGem && matchedGem.href) {
+      if (matchedGem && matchedGem.href && matchedGem.href !== "#") {
         window.history.replaceState(null, '', matchedGem.href);
       }
     } else if (!isOpen && pathname) {
@@ -99,62 +114,33 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
     }
   }, [isOpen, currentSrc, pathname]);
 
-  // Autoplay effect when src changes or modal opens
+  // Playback control effect
   React.useEffect(() => {
-    let mounted = true;
-
-    if (isOpen && videoRef.current) {
-        videoRef.current.load();
-        
+    if (isOpen && videoRef.current && !isYoutube) {
         const playPromise = videoRef.current.play();
-        
         if (playPromise !== undefined) {
             playPromise
-                .then(() => {
-                    if (mounted) setIsPlaying(true);
-                })
-                .catch((error) => {
-                    if (mounted) {
-                        setIsPlaying(false);
-                        // AbortError is expected if user navigates away or pauses quickly
-                        if (error.name !== 'AbortError') {
-                            console.error("Video playback failed:", error);
-                        }
-                    }
-                });
+                .then(() => setIsPlaying(true))
+                .catch(() => setIsPlaying(false));
         }
-    } else {
-        setIsPlaying(false);
     }
-
-    return () => {
-        mounted = false;
-    };
-  }, [isOpen, currentSrc]);
+  }, [isOpen, currentSrc, isYoutube]);
 
   // Handle Esc key
   React.useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-        if (e.key === "Escape") onClose();
-    };
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, [onClose]);
 
-  // Lock body scroll when modal is open
+  // Lock body scroll
   React.useEffect(() => {
     if (isOpen) {
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.paddingRight = "0px";
       document.body.style.overflow = "unset";
     }
-    return () => {
-      document.body.style.paddingRight = "0px";
-      document.body.style.overflow = "unset";
-    }
+    return () => { document.body.style.overflow = "unset"; }
   }, [isOpen]);
 
   const handleTimeUpdate = () => {
@@ -169,11 +155,8 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
   const togglePlay = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
+      if (isPlaying) videoRef.current.pause();
+      else videoRef.current.play();
       setIsPlaying(!isPlaying);
     }
   };
@@ -202,9 +185,7 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
     if (videoRef.current && progressRef.current) {
         const rect = progressRef.current.getBoundingClientRect();
         const clickedX = e.clientX - rect.left;
-        const width = rect.width;
-        const percentage = Math.max(0, Math.min(1, clickedX / width));
-        
+        const percentage = Math.max(0, Math.min(1, clickedX / rect.width));
         videoRef.current.currentTime = percentage * videoRef.current.duration;
         setProgress(percentage * 100);
     }
@@ -220,251 +201,223 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#3f1d14]/95 backdrop-blur-md flex items-center justify-center animate-in fade-in duration-300 p-0 md:p-8" style={{ zIndex: 100 }}>
+    <div className="fixed inset-0 z-100 bg-nomad-brown/95 backdrop-blur-xl flex items-center justify-center p-0 md:p-12 animate-in fade-in duration-500">
       
-      {/* Close Button */}
-      <button 
-        onClick={onClose}
-        className="absolute top-4 right-4 z-50 text-white/50 hover:text-[#f46b6b] transition-colors p-2 bg-black/20 backdrop-blur-md rounded-full md:bg-transparent md:backdrop-blur-none"
-      >
-        <X size={24} />
-      </button>
-      
-      {/* Modal Layout Container */}
-      <div className="flex flex-col lg:flex-row w-full max-w-[1600px] h-dvh md:h-auto md:max-h-[90vh] md:aspect-video bg-[#3f1d14] border-0 md:border md:border-[#f46b6b]/20 rounded-none md:rounded-xl overflow-hidden shadow-2xl">
-        
-        {/* Main Video Area */}
-        <div 
-            ref={containerRef}
-            className="relative w-full aspect-video shrink-0 lg:aspect-auto lg:flex-1 bg-black group overflow-hidden"
-            onMouseMove={resetControlsTimeout}
-            onMouseLeave={() => isPlaying && setShowControls(false)}
-            onClick={(e) => {
-              const rootIsYoutube = !!currentSrc && (currentSrc.includes("youtube.com") || currentSrc.includes("youtu.be"));
-              if (!rootIsYoutube) togglePlay(e);
-            }}
-        >
-            {(!currentSrc) ? null : (currentSrc.includes("youtube.com") || currentSrc.includes("youtu.be")) ? (
-                <iframe
-                    src={(() => {
-                      const videoId = currentSrc.includes("youtu.be")
-                        ? currentSrc.split("/").pop()?.split("?")[0]
-                        : currentSrc.split("v=")[1]?.split("&")[0];
-                      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${isMuted ? 1 : 0}&controls=1&rel=0`;
-                    })()}
-                    className="w-full h-full object-contain"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                />
-            ) : (
-                <video
-                    ref={videoRef}
-                    src={currentSrc}
-                    className="w-full h-full object-contain"
-                    onTimeUpdate={handleTimeUpdate}
-                    onEnded={() => setIsPlaying(false)}
-                    loop
-                    playsInline
-                />
-            )}
+      {/* Dynamic Background Light (Branding) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-nomad-red/5 rounded-full blur-[120px]" />
+      </div>
 
-            {/* Book Now Button - Top Right */}
-            {currentBookingUrl && (
-              <Button
-                href={currentBookingUrl.startsWith("http") ? currentBookingUrl : `https://${currentBookingUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="outline"
-                size="sm"
-                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => e.stopPropagation()}
+      <div className="absolute top-6 right-6 z-110 flex items-center gap-4">
+        {/* Download Button (Direct Videos Only) */}
+        {!isYoutube && currentSrc && (
+          <a 
+            href={currentSrc} 
+            download 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/50 hover:text-nomad-red transition-all duration-300 flex items-center gap-2 group"
+          >
+            <span className="text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Download</span>
+            <Download size={28} strokeWidth={1.5} />
+          </a>
+        )}
+
+        {/* Close Button */}
+        <button 
+          onClick={onClose}
+          className="text-white/50 hover:text-nomad-red transition-all duration-300 transform hover:rotate-90"
+        >
+          <X size={32} strokeWidth={1} />
+        </button>
+      </div>
+
+      <div className="relative w-full max-w-[1600px] h-full flex flex-col lg:flex-row bg-[#2a130d]/80 rounded-[40px] overflow-hidden border border-white/5 shadow-[0_40px_100px_rgba(0,0,0,0.6)]">
+        
+        {/* Main Cinema Area */}
+        <div 
+          ref={containerRef}
+          className="relative flex-1 bg-black group overflow-hidden flex flex-col"
+          onMouseMove={resetControlsTimeout}
+          onMouseLeave={() => isPlaying && setShowControls(false)}
+        >
+          {/* Video Player */}
+          <div className="relative flex-1 flex items-center justify-center" onClick={(e) => !isYoutube && togglePlay(e)}>
+            {isYoutube ? (
+               <iframe
+                src={(() => {
+                  const videoId = currentSrc.includes("youtu.be")
+                    ? currentSrc.split("/").pop()?.split("?")[0]
+                    : currentSrc.split("v=")[1]?.split("&")[0];
+                  return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${isMuted ? 1 : 0}&controls=1&rel=0&modestbranding=1`;
+                })()}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : currentSrc ? (
+              <video
+                ref={videoRef}
+                src={currentSrc}
+                className="w-full h-full object-contain"
+                onTimeUpdate={handleTimeUpdate}
+                onEnded={() => setIsPlaying(false)}
+                loop
+                playsInline
+              />
+            ) : null}
+
+            {/* Nomad Verified Badge Integration */}
+            {activeGem?.verified && (
+               <div className={cn(
+                  "absolute top-8 left-8 z-30 transition-all duration-500",
+                  showControls ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+               )}>
+                  <div className="flex items-center gap-3 px-5 py-2.5 bg-nomad-red/90 backdrop-blur-md rounded-full border border-white/20 shadow-2xl">
+                     <svg className="w-5 h-5 text-white fill-white/20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 3l1.5 4.5l4.5 1.5l-4.5 1.5l-1.5 4.5l-1.5-4.5l-4.5-1.5l4.5-1.5z" />
+                     </svg>
+                     <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white">Nomad Verified Stay</span>
+                  </div>
+               </div>
+            )}
+            
+            {/* Center Play/Pause Overlay (Non-YT) */}
+            {!isYoutube && !isPlaying && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] transition-all duration-500">
+                <div onClick={togglePlay} className="w-24 h-24 rounded-full bg-nomad-red flex items-center justify-center shadow-2xl hover:scale-110 transition-transform cursor-pointer">
+                  <Play size={40} className="ml-1 text-white fill-white" />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Nomad Custom Interface (Non-YT) */}
+          {!isYoutube && (
+            <div className={cn(
+              "absolute bottom-0 left-0 right-0 p-8 md:p-12 transition-all duration-500",
+              showControls ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}>
+              <div className="glass-card bg-nomad-brown/80 backdrop-blur-2xl border-white/10 p-6 flex flex-col gap-4">
+                {/* Progress */}
+                <div ref={progressRef} onClick={handleSeek} className="w-full h-1.5 bg-white/10 rounded-full cursor-pointer group/seek relative overflow-hidden">
+                   <div className="h-full bg-nomad-red transition-all duration-200" style={{ width: `${progress}%` }} />
+                </div>
+
+                {/* Controls Row */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-8 text-white">
+                    <button onClick={togglePlay} className="hover:text-nomad-red transition-colors">
+                       {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" />}
+                    </button>
+                    <div className="flex items-center gap-2 font-mono text-[10px] tracking-widest text-white/40 uppercase">
+                       <span className="text-white">{formatTime(videoRef.current?.currentTime || 0)}</span>
+                       <span>/</span>
+                       <span>{formatTime(duration)}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-6 text-white/60">
+                    <button onClick={toggleMute} className="hover:text-white transition-colors">
+                       {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                    </button>
+                    <button onClick={toggleFullscreen} className="hover:text-white transition-colors">
+                       {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Curation Sidebar */}
+        <div className="w-full lg:w-[420px] bg-nomad-brown flex flex-col border-t lg:border-t-0 lg:border-l border-white/5">
+          {/* Header */}
+          <div className="p-8 border-b border-white/5">
+            <h3 className="text-xs font-sans font-bold uppercase tracking-[0.3em] text-nomad-red mb-2">Collection</h3>
+            <h4 className="text-2xl font-serif italic text-white/90">{sidebarTitle}</h4>
+          </div>
+
+          {/* List */}
+          <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 custom-scrollbar">
+            {relatedVideos.map((item) => (
+              <div 
+                key={item.id}
+                onClick={() => !item.locked && item.src && handleVideoChange(item.src)}
                 className={cn(
-                  "absolute top-4 left-4 md:left-auto md:right-4 z-30 text-white transition-all duration-300",
-                  showControls ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+                  "relative flex gap-5 p-4 rounded-3xl transition-all duration-500 group",
+                  item.src === currentSrc ? "bg-white/5 border-white/10" : "hover:bg-white/2 border-transparent",
+                  item.locked ? "opacity-40 cursor-not-allowed" : "cursor-pointer border"
                 )}
               >
-                Book Now
-                <ExternalLink size={14} />
-              </Button>
-            )}
-
-            {/* Center Play/Pause Button Overlay */}
-            {(!(!!currentSrc && (currentSrc.includes("youtube.com") || currentSrc.includes("youtu.be"))) && (!isPlaying || showControls)) && (
-                <div className={cn(
-                    "absolute inset-0 flex items-center justify-center transition-all duration-300",
-                    !isPlaying ? "bg-black/20 backdrop-blur-[1px]" : "bg-transparent pointer-events-none"
-                )}>
-                     <div 
-                        className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:scale-110 transition-transform duration-300 text-white cursor-pointer pointer-events-auto hover:bg-[#f46b6b]/20 hover:border-[#f46b6b]"
-                        onClick={togglePlay}
-                     >
-                        {isPlaying ? (
-                             <Pause size={32} className="fill-white" />
-                        ) : (
-                             <Play size={32} className="ml-1 fill-white" />
-                        )}
-                     </div>
-                </div>
-            )}
-
-            {/* Custom Controls Bar */}
-            {!(!!currentSrc && (currentSrc.includes("youtube.com") || currentSrc.includes("youtu.be"))) && (
-                <div 
-                    className={cn(
-                        "absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/90 to-transparent p-4 md:p-6 pt-12 transition-opacity duration-300 flex flex-col gap-4",
-                        showControls ? "opacity-100" : "opacity-0"
-                    )}
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    {/* Progress Bar */}
-                    <div 
-                        ref={progressRef}
-                        className="w-full h-4 cursor-pointer group/progress relative flex items-center"
-                        onClick={handleSeek}
-                    >
-                        <div className="w-full h-[2px] bg-white/20 rounded-full overflow-hidden">
-                            <div 
-                                className="h-full bg-[#f46b6b] relative"
-                                style={{ width: `${progress}%` }}
-                            />
-                        </div>
-                        {/* Scrub Handle */}
-                        <div 
-                            className="absolute h-3 w-3 bg-[#f46b6b] rounded-full shadow-md opacity-0 group-hover/progress:opacity-100 transition-opacity transform scale-0 group-hover/progress:scale-100"
-                            style={{ left: `${progress}%`, transform: `translateX(-50%)` }}
-                        />
+                <div className="relative w-24 aspect-square rounded-2xl overflow-hidden shrink-0 border border-white/5 bg-black/20">
+                  {item.image ? (
+                    <img 
+                      src={item.image} 
+                      alt="" 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" 
+                    />
+                  ) : (item.src && (item.src.includes("youtube.com") || item.src.includes("youtu.be"))) ? (
+                    <img 
+                      src={getYoutubeThumbnail(item.src)} 
+                      alt="" 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" 
+                    />
+                  ) : item.src ? (
+                    <video 
+                      src={item.src} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                      muted
+                      playsInline
+                      onLoadedMetadata={(e) => {
+                        e.currentTarget.currentTime = item.thumbnailTime || 1;
+                      }}
+                    />
+                  ) : null}
+                  {item.src === currentSrc && (
+                    <div className="absolute inset-0 bg-nomad-red/20 flex items-center justify-center backdrop-blur-[1px]">
+                       <div className="w-8 h-8 rounded-full bg-nomad-red flex items-center justify-center">
+                          <Volume2 size={14} className="text-white animate-pulse" />
+                       </div>
                     </div>
-
-                    {/* Controls Row */}
-                    <div className="flex items-center justify-between font-mono text-xs text-white uppercase tracking-wider">
-                        <div className="flex items-center gap-6">
-                            <button onClick={togglePlay} className="hover:text-[#f46b6b] transition-colors">
-                                {isPlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
-                            </button>
-                            
-                            <div className="flex items-center gap-2 opacity-60">
-                                 <span>{formatTime(videoRef.current ? videoRef.current.currentTime : 0)}</span>
-                                 <span>/</span>
-                                 <span>{formatTime(duration)}</span>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                            <button onClick={toggleMute} className="hover:text-[#f46b6b] transition-colors">
-                                {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                            </button>
-                            <button onClick={toggleFullscreen} className="hover:text-[#f46b6b] transition-colors">
-                                 {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-                            </button>
-                        </div>
-                    </div>
+                  )}
                 </div>
-            )}
-        </div>
+                <div className="flex flex-col justify-center gap-1">
+                   <h5 className={cn(
+                     "font-serif text-lg leading-tight transition-colors",
+                     item.src === currentSrc ? "text-nomad-red" : "text-white/80 group-hover:text-white"
+                   )}>
+                     {item.title}
+                   </h5>
+                   <span className="text-[10px] font-sans font-medium uppercase tracking-widest text-white/30">
+                     {item.location}
+                   </span>
+                </div>
+              </div>
+            ))}
+          </div>
 
-        {/* Sidebar */}
-        <div className="flex-1 w-full lg:w-[360px] lg:flex-none bg-[#3f1d14] flex flex-col border-t lg:border-t-0 lg:border-l border-[#f46b6b]/10 overflow-hidden">
-            {/* Header */}
-            <div className="p-6 border-b border-[#f46b6b]/10 bg-[#3f1d14]">
-                <span className="font-serif text-lg text-[#f46b6b] tracking-wide">{sidebarTitle}</span>
+          {/* Sidebar CTA */}
+          {currentBookingUrl && (
+            <div className="p-8 bg-black/20 border-t border-white/5">
+               <a 
+                 href={currentBookingUrl.startsWith("http") ? currentBookingUrl : `https://${currentBookingUrl}`}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="group flex flex-col gap-1 w-full p-6 rounded-3xl bg-nomad-red hover:bg-[#ff8080] transition-all duration-500 shadow-2xl shadow-nomad-red/10 overflow-hidden relative"
+               >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-16 -mt-16 transition-all group-hover:scale-150" />
+                  <span className="text-white font-serif text-xl z-10 flex items-center gap-2">
+                    Book this Stay <ExternalLink size={16} strokeWidth={1.5} />
+                  </span>
+                  <span className="text-white/60 text-[10px] font-sans font-bold uppercase tracking-widest z-10">
+                    DIRECT PROPERTY LINK
+                  </span>
+               </a>
             </div>
-
-            {/* Video List */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-6 flex flex-col gap-4 bg-[#3f1d14]">
-                {relatedVideos.map((gem) => (
-                    <div 
-                        key={gem.id}
-                        onClick={() => !gem.locked && gem.src && handleVideoChange(gem.src, gem.id)}
-                        className={cn(
-                            "flex gap-4 group p-2 -mx-2 rounded-lg transition-colors items-center",
-                            gem.locked || !gem.src ? "cursor-not-allowed opacity-60" : "cursor-pointer",
-                            currentSrc === gem.src ? "bg-[#f46b6b]/10 border border-[#f46b6b]/20" : "hover:bg-[#f46b6b]/5 border border-transparent"
-                        )}
-                    >
-                        {/* Thumbnail */}
-                        <div className="relative w-[100px] aspect-video rounded-md overflow-hidden bg-black/20 shrink-0 border border-[#f46b6b]/10 group-hover:border-[#f46b6b]/30 transition-colors">
-                            {(gem.src && !(gem.src.includes("youtube.com") || gem.src.includes("youtu.be"))) ? (
-                                <video
-                                    src={gem.src}
-                                    className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                                    preload="auto"
-                                    muted
-                                    playsInline
-                                    onLoadedMetadata={(e) => {
-                                        const video = e.target as HTMLVideoElement;
-                                        video.currentTime = gem.thumbnailTime ?? 0.01;
-                                    }}
-                                />
-                            ) : (
-                                <Image
-                                    src={(gem.src && (gem.src.includes("youtube.com") || gem.src.includes("youtu.be"))) ? getYoutubeThumbnail(gem.src) : (gem.image || "")}
-                                    alt={gem.title}
-                                    fill
-                                    className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                                />
-                            )}
-                            {/* Playing Indicator */}
-                            {currentSrc === gem.src ? (
-                                <div className="absolute inset-0 bg-[#f46b6b]/20 flex items-center justify-center">
-                                    <svg 
-                                        className="w-5 h-5 text-[#f46b6b] drop-shadow-[0_0_8px_rgba(244,107,107,0.8)] animate-pulse"
-                                        xmlns="http://www.w3.org/2000/svg" 
-                                        viewBox="0 0 24 24" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        strokeWidth="2" 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round"
-                                    >
-                                        <path d="M6 3h12l4 6-10 13L2 9Z" fill="currentColor" fillOpacity="0.2"/>
-                                        <path d="M11 3 8 9l4 13 4-13-3-6" />
-                                        <path d="M2 9h20" />
-                                    </svg>
-                                </div>
-                            ) : (gem.locked || !gem.src) && (
-                                /* Coming Soon Overlay */
-                                <div className="absolute inset-0 bg-[#3f1d14]/60 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center z-10 w-full h-full">
-                                    <div className="p-1.5 bg-[#f46b6b]/20 rounded-full backdrop-blur-md border border-[#f46b6b]/40">
-                                        <Lock className="w-3 h-3 text-[#f46b6b]" />
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                        
-                        {/* Info */}
-                        <div className="flex flex-col justify-center gap-1">
-                            <h4 className={cn(
-                                "font-serif text-sm font-medium leading-tight transition-colors",
-                                currentSrc === gem.src ? "text-[#f46b6b]" : "text-[#fff7f0] group-hover:text-[#f46b6b]"
-                            )}>
-                                {gem.title}
-                            </h4>
-                            <span className="font-sans text-[10px] uppercase tracking-wide text-[#fff7f0]/50">
-                                {gem.location}
-                            </span>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* CTA */}
-            {currentBookingUrl && (
-                <div className="p-6 border-t border-[#f46b6b]/10 bg-[#371911]">
-                    <a 
-                        href={currentBookingUrl.startsWith('http') ? currentBookingUrl : `https://${currentBookingUrl}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex w-full items-center justify-between p-4 rounded-lg bg-[#f46b6b] hover:bg-[#d65252] transition-colors text-white group shadow-lg shadow-[#f46b6b]/10"
-                    >
-                        <div className="flex flex-col">
-                            <span className="font-serif font-bold text-sm">Book Your Stay</span>
-                            <span className="font-sans text-xs opacity-80">Experience Nomad Gems</span>
-                        </div>
-                        <ExternalLink size={18} className="opacity-80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </a>
-                </div>
-            )}
+          )}
         </div>
-
       </div>
     </div>
   );

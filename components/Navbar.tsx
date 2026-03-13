@@ -180,7 +180,7 @@ export default function Navbar() {
             className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isMapOpen ? "text-black" : "text-black/60 hover:text-black") : (isMapOpen ? "text-white" : "text-white/80 hover:text-white")}`}
             >
             <span className="relative">
-              Gems
+              Stays
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f46b6b] transition-all duration-300 group-hover:w-full" />
             </span>
             </Link>
@@ -312,7 +312,7 @@ export default function Navbar() {
             onClick={() => setIsMenuOpen(false)}
             className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
           >
-            Gems
+            Stays
           </Link>
           
           <Link

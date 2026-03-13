@@ -38,7 +38,7 @@ export default function GemsPage() {
 
   const handleGemClick = (gem: any) => {
     if (gem.href && gem.href !== "#") {
-      window.location.href = gem.href;
+      window.open(gem.href, "_blank");
     } else if (gem.src) {
       setActiveVideo(gem.src);
       setActiveBookingUrl(gem.bookingUrl || "");
