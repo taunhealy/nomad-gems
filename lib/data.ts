@@ -42,6 +42,9 @@ export type Tour = {
   bookingUrl?: string;
   image?: string;
   category?: string;
+  verified?: boolean;
+  locked?: boolean;
+  thumbnailTime?: number;
 };
 
 /** Extract a YouTube video ID from various YouTube URL formats */
@@ -67,6 +70,7 @@ export const GEMS: Gem[] = [
     coordinates: [-33.9249, 18.4241],
     href: "/stay/francolin-house",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Tour_Healy-House-creator.mp4",
+    image: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Tour_Healy-House-creator.mp4_snapshot_00.06.512.jpg",
     locked: false,
     bookingUrl: "https://www.blueowlmedia.nz",
     workAreas: 2,
@@ -292,6 +296,7 @@ export const TOURS: Tour[] = [
     title: "Francolin House: Complete Walkthrough",
     location: "Constantia, Cape Town",
     src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Tour_Healy-House-creator.mp4",
+    image: "https://assets.blueowlmedia.nz/Blue-Owl-Media_Tour_Healy-House-creator.mp4_snapshot_00.06.512.jpg",
     category: "Property Tour"
   }
 ];

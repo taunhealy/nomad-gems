@@ -5,7 +5,7 @@ import Image from "next/image";
 import { X, Play, Pause, Volume2, VolumeX, Maximize2, Minimize2, ExternalLink, Lock, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { GEMS, ENVIRONMENTS, Gem, getYoutubeThumbnail } from "../lib/data";
+import { GEMS, ENVIRONMENTS, TOURS, Gem, getYoutubeThumbnail } from "../lib/data";
 import Button from "./Button";
 
 interface VideoModalProps {
@@ -35,10 +35,16 @@ export function VideoModal({ isOpen, onClose, videoSrc, bookingUrl }: VideoModal
 
   // Derived logic for categorization and state
   const isYoutube = currentSrc?.includes("youtube.com") || currentSrc?.includes("youtu.be");
-  const activeGem = [...GEMS, ...ENVIRONMENTS].find(g => g.src === currentSrc);
+  
+  // Combine all possible video sources for lookup
+  const allMedia = [...GEMS, ...ENVIRONMENTS, ...TOURS];
+  const activeGem = allMedia.find(g => g.src === currentSrc);
+  
   const isEnvironment = ENVIRONMENTS.some(e => e.src === currentSrc);
-  const relatedVideos = isEnvironment ? ENVIRONMENTS : GEMS;
-  const sidebarTitle = isEnvironment ? "Regional Context" : "The Gems";
+  const isTour = TOURS.some(t => t.src === currentSrc);
+  
+  const relatedVideos = isEnvironment ? ENVIRONMENTS : (isTour ? TOURS : GEMS);
+  const sidebarTitle = isEnvironment ? "Regional Context" : (isTour ? "Property Tours" : "The Gems");
 
   // Helper to handle auto-hide
   const resetControlsTimeout = React.useCallback(() => {
