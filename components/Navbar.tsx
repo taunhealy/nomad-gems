@@ -297,7 +297,7 @@ export default function Navbar() {
       {/* Mobile Menu Overlay */}
       <div 
         ref={containerRef}
-        className="fixed inset-0 bg-[#3f1d14] flex flex-col p-8 pt-[120px] md:hidden z-[100] translate-x-full overflow-y-auto"
+        className={`fixed inset-0 bg-[#3f1d14] flex flex-col p-8 pt-[120px] md:hidden z-[100] translate-x-full overflow-y-auto transition-[visibility] duration-300 ${isMenuVisible ? "visible" : "invisible"}`}
       >
         <div ref={linksRef} className="flex flex-col gap-6 md:gap-8 items-start pb-8">
           <Link

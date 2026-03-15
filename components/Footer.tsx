@@ -49,9 +49,9 @@ export default function Footer() {
       <div className="w-full h-px bg-[#f46b6b]/20" />
 
       {/* Bottom Row */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 font-sans text-white/50 text-sm tracking-widest uppercase w-full">
-         <span>© 2026 Nomad Gems. All Rights Reserved. Built By Kea Logic.</span>
-         <Link href="https://www.youtube.com/@nomad-gems" target="_blank" rel="noopener noreferrer" className="font-bold text-[#c73f3b] opacity-80 cursor-pointer hover:opacity-100 transition-opacity">Follow on Youtube</Link>
+      <div className="flex flex-col md:flex-row justify-between items-center gap-6 font-sans text-white/50 text-[10px] md:text-sm tracking-widest uppercase w-full text-center md:text-left">
+         <span className="max-w-[300px] md:max-w-none">© 2026 Nomad Gems. All Rights Reserved. Built By Kea Logic.</span>
+         <Link href="https://www.youtube.com/@nomad-gems" target="_blank" rel="noopener noreferrer" className="font-bold text-[#c73f3b] opacity-80 cursor-pointer hover:opacity-100 transition-opacity whitespace-nowrap">Follow on Youtube</Link>
       </div>
 
     </footer>

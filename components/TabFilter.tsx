@@ -9,7 +9,7 @@ interface TabFilterProps {
 
 export default function TabFilter({ tabs, activeTab, onTabChange, className = "" }: TabFilterProps) {
   return (
-    <div className={`flex items-center gap-12 ${className}`}>
+    <div className={`flex items-center gap-4 md:gap-12 ${className}`}>
       {tabs.map((tab) => (
         <button
           key={tab}
