@@ -45,7 +45,7 @@ export default function MapSection() {
   };
 
   return (
-    <section className="w-full bg-[#fff7f0] py-16 md:py-[120px] px-6 md:px-[100px]">
+    <section className="w-full bg-[#fff7f0] py-16 md:py-[120px] px-6 md:px-[100px] overflow-x-hidden">
       <div className="max-w-[1440px] mx-auto flex flex-col gap-10">
         
         {/* Header */}
@@ -69,7 +69,7 @@ export default function MapSection() {
         </div>
 
         {/* Content Layout */}
-        <div className="flex flex-col md:flex-row bg-white rounded-[32px] overflow-hidden shadow-2xl shadow-[#3f1d14]/5 border border-black/5 h-[600px] md:h-[750px]">
+        <div className="flex flex-col md:flex-row bg-white rounded-[32px] overflow-hidden shadow-2xl shadow-[#3f1d14]/5 border border-black/5 h-auto md:h-[750px]">
           
           {/* Left Side: Thumbnails */}
           <div className="w-full md:w-[400px] lg:w-[450px] flex flex-col h-full bg-[#FAF9F6]">
@@ -127,7 +127,7 @@ export default function MapSection() {
           </div>
 
           {/* Right Side: Map */}
-          <div className="flex-1 relative h-[400px] md:h-full z-0">
+          <div className="flex-1 relative h-[300px] md:h-full z-0 w-full min-h-[300px]">
             <DynamicMap 
               gems={filteredGems}
               selectedGemId={selectedGemId}

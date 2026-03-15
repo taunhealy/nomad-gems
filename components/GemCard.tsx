@@ -194,7 +194,7 @@ export default function GemCard({ gem, onClick, variant = "default", className =
       <div className="flex justify-between items-center gap-4 w-full text-left mt-2">
         <div className="shrink grid gap-0.5">
           <p>
-            <span className={`font-serif lg:text-3xl text-xl tracking-tighter leading-tight transition-all ${variant === 'dark' ? 'text-white' : 'text-black'} ${!(gem.locked || gem.comingSoon) ? "group-hover:underline decoration-1 underline-offset-4" : ""}`}>
+            <span className={`font-serif lg:text-3xl sm:text-2xl text-lg tracking-tighter leading-tight transition-all ${variant === 'dark' ? 'text-white' : 'text-black'} ${!(gem.locked || gem.comingSoon) ? "group-hover:underline decoration-1 underline-offset-4" : ""}`}>
               {gem.title}
             </span>
           </p>

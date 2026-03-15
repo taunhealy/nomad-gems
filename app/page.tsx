@@ -14,7 +14,7 @@ const imgCard = "/images/card_img.png";
 
 export default function Home() {
   return (
-    <div className="bg-[#fff7f0] content-stretch flex flex-col items-center relative size-full">
+    <div className="bg-[#fff7f0] content-stretch flex flex-col items-center relative size-full overflow-x-hidden">
       <Navbar />
       <Hero />
       
