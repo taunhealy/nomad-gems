@@ -180,7 +180,7 @@ export default function Navbar() {
             className={`group flex items-center justify-center font-sans text-[16px] uppercase tracking-widest transition-colors duration-300 cursor-pointer h-full ${isSolid ? (isMapOpen ? "text-black" : "text-black/60 hover:text-black") : (isMapOpen ? "text-white" : "text-white/80 hover:text-white")}`}
             >
             <span className="relative">
-              Stays
+              Gems
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f46b6b] transition-all duration-300 group-hover:w-full" />
             </span>
             </Link>
@@ -312,7 +312,7 @@ export default function Navbar() {
             onClick={() => setIsMenuOpen(false)}
             className="font-serif text-[48px] text-[#f46b6b] hover:text-white transition-colors leading-none tracking-tight opacity-0"
           >
-            Stays
+            Gems
           </Link>
           
           <Link
@@ -330,24 +330,28 @@ export default function Navbar() {
             Contact
           </Link>
 
-          {/* Featured Gem in Mobile Menu */}
+          {/* Featured Gems in Mobile Menu */}
           <div className="w-full mt-8 opacity-0">
-            <span className="font-sans text-[10px] uppercase tracking-widest text-[#f46b6b] mb-4 block">Featured Gem</span>
-            <div className="w-full max-w-[320px]">
-               <GemCard 
-                  gem={GEMS[0]} 
-                  variant="dark"
-                  onClick={() => {
-                      setIsMenuOpen(false);
-                      if (GEMS[0].href && GEMS[0].href !== "#") {
-                          router.push(GEMS[0].href);
-                      } else if (GEMS[0].src) {
-                          setCurrentVideoSrc(GEMS[0].src);
-                          setCurrentBookingUrl(GEMS[0].bookingUrl || "");
-                          setIsModalOpen(true);
-                      }
-                  }} 
-               />
+            <span className="font-sans text-[10px] uppercase tracking-widest text-[#f46b6b] mb-4 block">Featured Gems</span>
+            <div className="flex flex-col gap-6 w-full">
+               {GEMS.slice(0, 3).map((featuredGem) => (
+                 <div key={featuredGem.id} className="w-full max-w-[320px]">
+                    <GemCard 
+                       gem={featuredGem} 
+                       variant="dark"
+                       onClick={() => {
+                           setIsMenuOpen(false);
+                           if (featuredGem.href && featuredGem.href !== "#") {
+                               router.push(featuredGem.href);
+                           } else if (featuredGem.src) {
+                               setCurrentVideoSrc(featuredGem.src);
+                               setCurrentBookingUrl(featuredGem.bookingUrl || "");
+                               setIsModalOpen(true);
+                           }
+                       }} 
+                    />
+                 </div>
+               ))}
             </div>
           </div>
         </div>

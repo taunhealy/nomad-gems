@@ -66,6 +66,7 @@ export default function LatestGems() {
               />
               <div className="hidden sm:block h-8 w-px bg-black/10 mx-2" />
               <button 
+                suppressHydrationWarning
                 onClick={() => setIsVerifiedOnly(!isVerifiedOnly)}
                 className={cn(
                   "relative group p-2 rounded-full transition-all duration-300",

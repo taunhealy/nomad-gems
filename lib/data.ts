@@ -287,8 +287,8 @@ export const TOURS: Tour[] = [
     id: "t2",
     title: "Manor House & Garden Tour",
     location: "Bredasdorp, South Africa",
-    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_6OnKloof_Exterior-1-take-day-3.mp4",
-    image: "https://assets.blueowlmedia.nz/Blue-Owl-Media_6OnKloof_Exterior-1-take-day-3.mp4_snapshot_00.06.001.jpg",
+    src: "https://assets.blueowlmedia.nz/Blue-Owl-Media_6OnKloof_Tour-Sunny-A2.mp4",
+    image: "https://assets.blueowlmedia.nz/Blue-Owl-Media_6OnKloof_Tour-Sunny-A2.mp4_snapshot_00.24.911.webp",
     category: "Property Tour"
   },
   {
