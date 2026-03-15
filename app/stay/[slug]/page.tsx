@@ -139,7 +139,7 @@ export default function StayPage({ params }: PageProps) {
                 {gem.location}
               </div>
             </div>
-            <h1 className="text-6xl md:text-9xl font-serif font-medium leading-[0.9] tracking-tighter">
+            <h1 className="text-5xl sm:text-7xl md:text-9xl font-serif font-medium leading-[0.9] tracking-tighter">
               {gem.title}
             </h1>
           </div>
@@ -181,7 +181,7 @@ export default function StayPage({ params }: PageProps) {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-black/10 pb-8 gap-8">
               <div className="flex flex-col gap-3">
                 <h3 className="text-xs font-sans uppercase tracking-[0.3em] text-nomad-red font-bold">Property Tours</h3>
-                <h2 className="text-5xl md:text-7xl font-serif font-medium leading-none tracking-tight text-black">
+                <h2 className="text-4xl sm:text-5xl md:text-7xl font-serif font-medium leading-none tracking-tight text-black">
                   The Tour
                 </h2>
               </div>
@@ -222,7 +222,7 @@ export default function StayPage({ params }: PageProps) {
                 <div className="inline-flex items-center gap-3 py-2.5 px-5 bg-white/5 backdrop-blur-xl rounded-full text-nomad-red border border-white/10 w-fit">
                   <span className="text-[10px] font-bold uppercase tracking-[0.25em] leading-none">Independent Audit</span>
                 </div>
-                <h2 className="text-6xl md:text-7xl lg:text-8xl font-serif font-medium leading-[0.9] tracking-tighter text-white m-0">
+                <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-medium leading-[0.9] tracking-tighter text-white m-0">
                   Remote Work <br className="hidden md:block" /> Analysis
                 </h2>
                 <p className="text-white/60 text-lg md:text-xl leading-relaxed max-w-lg mt-4 font-sans">
@@ -240,7 +240,7 @@ export default function StayPage({ params }: PageProps) {
                       <div className="w-1.5 h-1.5 rounded-full bg-nomad-red animate-pulse" />
                       Verification Status
                     </div>
-                    <h4 className="professional-heading text-5xl! tracking-tight">Workspace Audit</h4>
+                    <h4 className="professional-heading text-3xl sm:text-4xl md:text-5xl tracking-tight">Workspace Audit</h4>
                   </div>
                   <div className="flex flex-col gap-3 text-left sm:text-right">
                     <span className="metric-label">Last Verified</span>
@@ -343,7 +343,7 @@ export default function StayPage({ params }: PageProps) {
               <div className="glass-card glass-card-hover p-10 flex flex-col group h-full min-h-[260px]">
                 <div className="mb-10">
                   <p className="premium-tag mb-2">Work Areas</p>
-                  <h3 className="professional-heading text-3xl! font-medium leading-tight">Dedicated desks</h3>
+                  <h3 className="professional-heading text-2xl sm:text-3xl md:text-4xl font-medium leading-tight">Dedicated desks</h3>
                 </div>
                 <div className="mt-auto flex items-center justify-between">
                   <div className="w-14 h-14 rounded-2xl bg-nomad-red/10 flex items-center justify-center text-nomad-red group-hover:scale-110 group-hover:bg-nomad-red/20 transition-all duration-500 shadow-lg shadow-nomad-red/5">
@@ -360,7 +360,7 @@ export default function StayPage({ params }: PageProps) {
               <div className="glass-card glass-card-hover p-10 flex flex-col group h-full min-h-[260px]">
                 <div className="mb-10">
                   <p className="premium-tag mb-2">WiFi Quality</p>
-                  <h3 className="professional-heading text-3xl! font-medium leading-tight">High-bandwidth fiber</h3>
+                  <h3 className="professional-heading text-2xl sm:text-3xl md:text-4xl font-medium leading-tight">High-bandwidth fiber</h3>
                 </div>
                 <div className="mt-auto flex items-center justify-between">
                   <div className="w-14 h-14 rounded-2xl bg-nomad-red/10 flex items-center justify-center text-nomad-red group-hover:scale-110 group-hover:bg-nomad-red/20 transition-all duration-500 shadow-lg shadow-nomad-red/5">
@@ -377,7 +377,7 @@ export default function StayPage({ params }: PageProps) {
               <div className="glass-card glass-card-hover p-10 flex flex-col group h-full min-h-[260px]">
                 <div className="mb-10">
                   <p className="premium-tag mb-2">Ergonomics</p>
-                  <h3 className="professional-heading text-3xl! font-medium leading-tight">Desk & Chair focus</h3>
+                  <h3 className="professional-heading text-2xl sm:text-3xl md:text-4xl font-medium leading-tight">Desk & Chair focus</h3>
                 </div>
                 <div className="mt-auto flex items-center justify-between">
                   <div className="w-14 h-14 rounded-2xl bg-nomad-red/10 flex items-center justify-center text-nomad-red group-hover:scale-110 group-hover:bg-nomad-red/20 transition-all duration-500 shadow-lg shadow-nomad-red/5">
@@ -394,7 +394,7 @@ export default function StayPage({ params }: PageProps) {
               <div className="glass-card glass-card-hover p-10 flex flex-col group h-full min-h-[260px]">
                 <div className="mb-10">
                   <p className="premium-tag mb-2">Signal Strength</p>
-                  <h3 className="professional-heading text-3xl! font-medium leading-tight">Reliable backup</h3>
+                  <h3 className="professional-heading text-2xl sm:text-3xl md:text-4xl font-medium leading-tight">Reliable backup</h3>
                 </div>
                 <div className="mt-auto flex items-center justify-between">
                   <div className="w-14 h-14 rounded-2xl bg-nomad-red/10 flex items-center justify-center text-nomad-red group-hover:scale-110 group-hover:bg-nomad-red/20 transition-all duration-500 shadow-lg shadow-nomad-red/5">
@@ -415,7 +415,7 @@ export default function StayPage({ params }: PageProps) {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-12 border-b border-black/10 pb-8 gap-8">
             <div className="flex flex-col gap-3">
               <h3 className="text-xs font-sans uppercase tracking-[0.3em] text-nomad-red font-bold">Quick Details</h3>
-              <h2 className="text-5xl md:text-7xl font-serif font-medium leading-none tracking-tight text-black">
+              <h2 className="text-4xl sm:text-5xl md:text-7xl font-serif font-medium leading-none tracking-tight text-black">
                 At a Glance
               </h2>
             </div>
@@ -478,7 +478,7 @@ export default function StayPage({ params }: PageProps) {
             {/* Action Buttons */}
             {(gem.bookingUrl || gem.googleMapsUrl) && (
               <div className="flex flex-col gap-6">
-                 <div className="bg-[#FAF9F6] p-8 md:p-12 rounded-[40px] border border-black/5 flex flex-col gap-8 h-full">
+                 <div className="bg-[#FAF9F6] p-6 md:p-12 rounded-[40px] border border-black/5 flex flex-col gap-8 h-full">
                     <h4 className="text-2xl font-serif italic text-black/80">
                       {gem.bookingUrl && gem.googleMapsUrl 
                         ? "Ready to book your stay or explore their Google listing?" 
@@ -507,7 +507,7 @@ export default function StayPage({ params }: PageProps) {
                           target="_blank"
                           rel="noopener noreferrer"
                           variant="outline"
-                          className="flex-1 bg-white border-black/10 text-black hover:border-black"
+                          className="flex-1 bg-white border-black/10 text-black hover:border-black hover:bg-black/5 whitespace-nowrap"
                           size="lg"
                         >
                           <Search size={20} />
@@ -535,7 +535,7 @@ export default function StayPage({ params }: PageProps) {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-black/10 pb-8 gap-8">
               <div className="flex flex-col gap-3">
                 <h3 className="text-xs font-sans uppercase tracking-[0.3em] text-nomad-red font-bold">Surroundings</h3>
-                <h2 className="text-5xl md:text-7xl font-serif font-medium leading-none tracking-tight text-black">
+                <h2 className="text-4xl sm:text-5xl md:text-7xl font-serif font-medium leading-none tracking-tight text-black">
                   The Environment
                 </h2>
               </div>
@@ -563,7 +563,7 @@ export default function StayPage({ params }: PageProps) {
           <div className="max-w-[1440px] mx-auto relative">
             <div className="flex flex-col gap-4 mb-12">
                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-nomad-red">Continue Exploring</span>
-               <h2 className="text-5xl md:text-6xl font-serif tracking-tighter text-black">More Stays</h2>
+               <h2 className="text-4xl sm:text-5xl md:text-6xl font-serif tracking-tighter text-black">More Stays</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">

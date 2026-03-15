@@ -29,7 +29,7 @@ type ButtonProps = ButtonAsButton | ButtonAsLink;
 const sizeClasses: Record<ButtonSize, string> = {
   sm: "px-4 py-2 text-xs",
   md: "px-6 py-3 text-sm",
-  lg: "px-10 py-4 text-base",
+  lg: "px-6 md:px-10 py-4 text-sm md:text-base",
 };
 
 const variantClasses: Record<ButtonVariant, { base: string; fill: string; hover: string }> = {
