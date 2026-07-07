@@ -101,7 +101,7 @@ export default function WorkPage() {
           <h1 className="font-serif font-extrabold text-[48px] md:text-[96px] text-white leading-none text-center max-w-[900px]">
             Work Without Walls
           </h1>
-          <p className="font-sans text-[16px] md:text-lg text-white/60 max-w-[520px] text-center leading-relaxed">
+          <p className="font-sans text-lg md:text-xl text-white/80 max-w-[600px] text-center leading-relaxed">
             Nature retreats that are 'good enough' to get work done, surrounded by the kind of wild beauty that makes you feel alive.
           </p>
           <div className="flex flex-col md:flex-row items-center gap-4 mt-8 w-full md:w-auto">
