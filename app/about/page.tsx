@@ -195,7 +195,7 @@ export default function WorkPage() {
 
       {/* Stats Bar */}
       <div className="w-full bg-[#f46b6b] py-12 md:py-16 px-6 md:px-[100px]">
-        <div className="max-w-[1000px] mx-auto flex flex-wrap items-center justify-between gap-8">
+        <div className="max-w-[1000px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 justify-items-center">
           {stats.map((stat) => (
             <div key={stat.label} className="flex flex-col items-center gap-2 text-center min-w-[120px]">
               <span className="font-serif font-extrabold text-[48px] text-white leading-none">
